@@ -652,7 +652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelAsset: {fileID: 5022602860645237092, guid: d8c50f62294a1d74897fa1328d77d310, type: 3}
-  display: {fileID: 829346626}
+  imagePath: TESTE
 --- !u!4 &1376372962
 Transform:
   m_ObjectHideFlags: 0

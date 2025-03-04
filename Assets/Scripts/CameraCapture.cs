@@ -6,7 +6,7 @@ public class CameraCapture : MonoBehaviour
     public RawImage display;
     private WebCamTexture webcamTexture;
     public static CameraCapture instance; // Criar uma instância global para acesso
-    private bool camAvaiable;
+    // private bool camAvaiable;
     
     void Awake()
     {
@@ -20,7 +20,7 @@ public class CameraCapture : MonoBehaviour
         if(devices.Length == 0)
         {
             Debug.Log("No camera detected.");
-            camAvaiable = false;
+            // camAvaiable = false;
             return;
         }
 
