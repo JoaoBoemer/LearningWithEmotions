@@ -77,6 +77,8 @@ public class EmotionDetector : MonoBehaviour
             worker.Execute(inputTensor);
             Tensor outputTensor = worker.PeekOutput();
 
+            Debug.Log("Dimensão do tensor de saída: " + outputTensor.shape.ToString());
+
             Debug.Log("Saída do modelo (Unity): " + outputTensor.ToString());
 
             // Obter os valores do tensor de saída
@@ -84,6 +86,12 @@ public class EmotionDetector : MonoBehaviour
             for (int i = 0; i < 7; i++)
             {
                 predictions[i] = outputTensor[0, 0, 0, i]; // Cada valor para cada emoção
+            }
+
+            float sum = predictions.Sum();
+            if (Math.Abs(sum - 1.0f) > 0.1f) // Permite uma pequena margem de erro
+            {
+                Debug.LogWarning($"A soma das probabilidades é inesperada: {sum}");
             }
 
             // Exibir todas as probabilidades de emoções
