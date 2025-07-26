@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
+using System.Globalization;
 using Unity.Barracuda;
 using System;
 using System.Collections;
 using System.Linq;
+using System.IO;
 
 public class EmotionDetector : MonoBehaviour
 {
@@ -25,9 +26,6 @@ public class EmotionDetector : MonoBehaviour
         webcamTexture = CameraCapture.instance.GetCameraTexture();
 
         StartCoroutine(WaitForCamera());
-
-        // Inicia a previsão de emoções a cada 1 segundo
-        // StartCoroutine(PredictEmotionRoutine());
     }
 
     IEnumerator WaitForCamera()
@@ -55,10 +53,12 @@ public class EmotionDetector : MonoBehaviour
     {
         if (webcamTexture.width > 100) // Garante que a câmera já iniciou
         {
+            Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
+            tempTexture.SetPixels(webcamTexture.GetPixels());
+            tempTexture.Apply();
+
             // Criar uma textura com o tamanho esperado pelo modelo (48x48)
-            Texture2D texture = new Texture2D(48, 48);
-            texture.SetPixels(webcamTexture.GetPixels());
-            texture.Apply();
+            Texture2D texture = ResizeTexture(tempTexture, 48, 48);
 
             // Converter a imagem para escala de cinza
             Color[] pixels = texture.GetPixels();
@@ -69,12 +69,17 @@ public class EmotionDetector : MonoBehaviour
                 grayscalePixels[i] = pixels[i].grayscale; // Calcula a média RGB para obter tons de cinza
             }
 
-            // Criar um tensor com 1 canal (48x48x1)
+            SavePixelsToCSV(grayscalePixels, "grayscalePixels.csv");
+
             Tensor inputTensor = new Tensor(new TensorShape(1, 48, 48, 1), grayscalePixels);
 
             // Fazer a inferência
             worker.Execute(inputTensor);
             Tensor outputTensor = worker.PeekOutput();
+
+            Debug.Log("Dimensão do tensor de saída: " + outputTensor.shape.ToString());
+
+            Debug.Log("Saída do modelo (Unity): " + outputTensor.ToString());
 
             // Obter os valores do tensor de saída
             float[] predictions = new float[7]; // Para 7 emoções
@@ -83,8 +88,20 @@ public class EmotionDetector : MonoBehaviour
                 predictions[i] = outputTensor[0, 0, 0, i]; // Cada valor para cada emoção
             }
 
+            float sum = predictions.Sum();
+            if (Math.Abs(sum - 1.0f) > 0.1f) // Permite uma pequena margem de erro
+            {
+                Debug.LogWarning($"A soma das probabilidades é inesperada: {sum}");
+            }
+
+            // Exibir todas as probabilidades de emoções
+            for (int i = 0; i < predictions.Length; i++)
+            {
+                Debug.Log(emotionLabels[i] + ": " + predictions[i]);
+            }
+
             // Encontrar o índice da maior probabilidade
-            int maxIndex = Mathf.FloorToInt(Array.IndexOf(predictions, predictions.Max()));
+            int maxIndex = Array.IndexOf(predictions, predictions.Max());
 
             // Exibir o resultado
             Debug.Log("Emoção Detectada: " + emotionLabels[maxIndex]);
@@ -94,6 +111,48 @@ public class EmotionDetector : MonoBehaviour
         }
     }
 
+    Texture2D ResizeTexture(Texture2D source, int width, int height)
+    {
+        // Criar RenderTexture com o novo tamanho
+        RenderTexture rt = new RenderTexture(width, height, 24);
+        RenderTexture.active = rt;
+
+        // Renderizar a textura original para a RenderTexture
+        Graphics.Blit(source, rt);
+
+        // Criar uma nova Texture2D e copiar os pixels da RenderTexture
+        Texture2D resizedTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        resizedTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        resizedTexture.Apply();
+
+        // Liberar recursos
+        RenderTexture.active = null;
+        rt.Release();
+
+        return resizedTexture;
+    }
+    
+    void SavePixelsToCSV(float[] grayscalePixels, string fileName, int width = 48)
+    {
+        // Criar o caminho do arquivo
+        string path = Application.persistentDataPath + "/" + fileName;
+        CultureInfo ci = CultureInfo.InvariantCulture;  // Garante o uso de ponto decimal
+
+        // Abrir o arquivo para escrita
+        using (StreamWriter writer = new StreamWriter(path, false))
+        {
+            for (int i = 0; i < grayscalePixels.Length; i++)
+            {
+                writer.Write(grayscalePixels[i].ToString(ci));
+                if ((i + 1) % width == 0) // A cada 48 pixels (tamanho da imagem 48x48), pular uma linha
+                    writer.WriteLine();
+                else
+                    writer.Write(";");
+            }
+        }
+
+        Debug.Log("Arquivo CSV salvo em: " + path);
+    }
 
     void OnDestroy()
     {
