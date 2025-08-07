@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class SwipeController : MonoBehaviour, IEndDragHandler
 {
@@ -13,29 +15,34 @@ public class SwipeController : MonoBehaviour, IEndDragHandler
     [SerializeField] LeanTweenType tweenType;
     float dragTreshould;
 
+    [SerializeField] Image[] barImage;
+    [SerializeField] Sprite barClosed, barOpen;
+
+    [SerializeField] private string nomeFase1;
+    [SerializeField] private string nomeFase2;
+    [SerializeField] private string nomeFase3;
+    [SerializeField] private string nomeFase4;
+
     private void Awake()
     {
         currentPage = 1;
         targetPos = levelPagesRect.localPosition;
+        UpdateBar();
     }
-
 
     public void Next()
     {
-        Debug.Log("FuncNext");
-        if(currentPage < maxPage)
+        if (currentPage < maxPage)
         {
             currentPage++;
             targetPos += pageStep;
             MovePage();
-            Debug.Log("FuncNextIf");
-        }    
+        }
     }
 
-    // Update is called once per frame
     public void Previous()
     {
-        if(currentPage > 1)
+        if (currentPage > 1)
         {
             currentPage--;
             targetPos -= pageStep;
@@ -46,13 +53,14 @@ public class SwipeController : MonoBehaviour, IEndDragHandler
     public void MovePage()
     {
         levelPagesRect.LeanMoveLocal(targetPos, tweenTime).setEase(tweenType);
+        UpdateBar();
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if(Mathf.Abs(eventData.position.x - eventData.pressPosition.x) > dragTreshould)
+        if (Mathf.Abs(eventData.position.x - eventData.pressPosition.x) > dragTreshould)
         {
-            if(eventData.position.x > eventData.pressPosition.x)
+            if (eventData.position.x > eventData.pressPosition.x)
                 Previous();
             else
                 Next();
@@ -61,5 +69,20 @@ public class SwipeController : MonoBehaviour, IEndDragHandler
         {
             MovePage();
         }
+    }
+
+    void UpdateBar()
+    {
+        foreach (var item in barImage)
+        {
+            item.sprite = barClosed;
+        }
+
+        barImage[currentPage - 1].sprite = barOpen;
+    }
+
+    public void Jogar()
+    {
+        SceneManager.LoadScene(nomeFase1);
     }
 }

@@ -5,18 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField]
-    private string nomeLevelJogo;
+    [SerializeField] private string nomeLevelJogo;
+    [SerializeField] private GameObject painelMenuInicial;
+    [SerializeField] private GameObject painelOpcoes;
+    [SerializeField] private GameObject painelSelecaoFase;
 
-    [SerializeField]
-    private GameObject painelMenuInicial;
-
-    [SerializeField]
-    private GameObject painelOpcoes;
-
+    public void AbrirFase(int faseId)
+    {
+        string nomeFase = "Fase" + faseId;
+        SceneManager.LoadScene(nomeFase);
+    }
     public void Jogar()
     {
-        SceneManager.LoadScene(nomeLevelJogo);
+        painelMenuInicial.SetActive(false);
+        painelSelecaoFase.SetActive(true);
+    }
+
+    public void FecharSelecaoFase()
+    {
+        painelSelecaoFase.SetActive(false);
+        painelMenuInicial.SetActive(true);
     }
 
     public void AbrirOpcoes()
