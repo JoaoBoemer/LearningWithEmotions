@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +7,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject painelMenuInicial;
     [SerializeField] private GameObject painelOpcoes;
     [SerializeField] private GameObject painelSelecaoFase;
+
+    void Awake()
+    {
+        // DontDestroyOnLoad(gameObject);
+        GameSettings.Carregar();
+    }
 
     public void AbrirFase(int faseId)
     {
@@ -41,7 +45,6 @@ public class MenuManager : MonoBehaviour
 
     public void SairJogo()
     {
-        Debug.Log("Sair do Jogo");
         Application.Quit();
     }
 }

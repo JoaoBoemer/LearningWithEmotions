@@ -1,72 +1,41 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConfiguracaoEmocoes : MonoBehaviour
+public class ConfiguracoesManager : MonoBehaviour
 {
-    public Button[] botoesEmocoes; // Arraste os botões na ordem das emoções no Inspector
-    public Color corAtiva = Color.white;
-    public Color corDesativada = Color.gray;
+    public Toggle toggleAlegria;
+    public Toggle toggleTristeza;
+    public Toggle toggleMedo;
+    public Toggle toggleRaiva;
+    public Toggle toggleSurpresa;
+    public Toggle toggleNojo;
 
-    private HashSet<TipoEmocao> emocoesDesativadas = new HashSet<TipoEmocao>();
-
-    private void Start()
+    void Start()
     {
-        // Garante que todos começam ativos
-        for (int i = 0; i < botoesEmocoes.Length; i++)
-        {
-            int index = i;
-            botoesEmocoes[i].onClick.AddListener(() => AlternarEmocao((TipoEmocao)index));
-            AtualizarCorBotao((TipoEmocao)index);
-        }
+        GameSettings.Carregar();
+
+        toggleAlegria.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Alegria);
+        toggleTristeza.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Tristeza);
+        toggleMedo.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Medo);
+        toggleRaiva.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Raiva);
+        toggleSurpresa.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Surpresa);
+        toggleNojo.isOn = !GameSettings.EmocaoDesativada(TipoEmocao.Nojo);
+
+        toggleAlegria.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Alegria, ativo));
+        toggleTristeza.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Tristeza, ativo));
+        toggleMedo.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Medo, ativo));
+        toggleRaiva.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Raiva, ativo));
+        toggleSurpresa.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Surpresa, ativo));
+        toggleNojo.onValueChanged.AddListener((ativo) => AlterarEmocao(TipoEmocao.Nojo, ativo));
     }
 
-    public void AlternarEmocao(TipoEmocao emocao)
+    void AlterarEmocao(TipoEmocao emocao, bool ativa)
     {
-        if (emocoesDesativadas.Contains(emocao))
-            emocoesDesativadas.Remove(emocao); // Reativar
+        if (ativa)
+            GameSettings.RemoverEmocaoDesativada(emocao);
         else
-            emocoesDesativadas.Add(emocao); // Desativar
+            GameSettings.AdicionarEmocaoDesativada(emocao);
 
-        AtualizarCorBotao(emocao);
-        SalvarConfiguracao();
-    }
-
-    private void AtualizarCorBotao(TipoEmocao emocao)
-    {
-        int index = (int)emocao;
-        var colors = botoesEmocoes[index].colors;
-        colors.normalColor = emocoesDesativadas.Contains(emocao) ? corDesativada : corAtiva;
-        botoesEmocoes[index].colors = colors;
-    }
-
-    private void SalvarConfiguracao()
-    {
-        // Salva como string no PlayerPrefs (ex: "Alegria,Tristeza")
-        string[] desativadasArray = new string[emocoesDesativadas.Count];
-        int i = 0;
-        foreach (var emocao in emocoesDesativadas)
-        {
-            desativadasArray[i] = emocao.ToString();
-            i++;
-        }
-        PlayerPrefs.SetString("EmocoesDesativadas", string.Join(",", desativadasArray));
-        PlayerPrefs.Save();
-    }
-
-    public static HashSet<TipoEmocao> CarregarConfiguracao()
-    {
-        var desativadas = new HashSet<TipoEmocao>();
-        string data = PlayerPrefs.GetString("EmocoesDesativadas", "");
-        if (!string.IsNullOrEmpty(data))
-        {
-            string[] nomes = data.Split(',');
-            foreach (string nome in nomes)
-            {
-                if (System.Enum.TryParse(nome, out TipoEmocao emocao))
-                    desativadas.Add(emocao);
-            }
-        }
-        return desativadas;
+        GameSettings.Salvar();
     }
 }
