@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 public class SwipeController : MonoBehaviour, IEndDragHandler
 {
@@ -17,11 +16,6 @@ public class SwipeController : MonoBehaviour, IEndDragHandler
 
     [SerializeField] Image[] barImage;
     [SerializeField] Sprite barClosed, barOpen;
-
-    [SerializeField] private string nomeFase1;
-    [SerializeField] private string nomeFase2;
-    [SerializeField] private string nomeFase3;
-    [SerializeField] private string nomeFase4;
 
     private void Awake()
     {
@@ -79,10 +73,5 @@ public class SwipeController : MonoBehaviour, IEndDragHandler
         }
 
         barImage[currentPage - 1].sprite = barOpen;
-    }
-
-    public void Jogar()
-    {
-        SceneManager.LoadScene(nomeFase1);
     }
 }

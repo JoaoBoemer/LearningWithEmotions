@@ -4,24 +4,47 @@ using UnityEngine;
 
 public class Fase1Controller : MonoBehaviour
 {
-    public List<string> emocaoConfiguradas; // Ex: "Alegria", "Tristeza"
     public List<Pergunta> bancoPerguntas; // Todas as perguntas possíveis
-
     private Queue<Pergunta> filaPerguntas;
     private int acertos;
 
+    // Lista fixa de todas as emoções possíveis
+    private readonly string[] todasEmocoes = { "Alegria", "Tristeza", "Medo", "Raiva", "Surpresa", "Nojo" };
+
     void Start()
     {
+        CarregarEmocoesConfiguradas();
         CriarFilaDePerguntas();
         MostrarProximaPergunta();
     }
+
+    void CarregarEmocoesConfiguradas()
+    {
+        // Recupera do PlayerPrefs as emoções ativas
+        List<string> emocoesAtivas = new List<string>();
+
+        foreach (var emocao in todasEmocoes)
+        {
+            if (PlayerPrefs.GetInt("Emocao_" + emocao, 1) == 1) // 1 = ativa, 0 = desativada
+                emocoesAtivas.Add(emocao);
+        }
+
+        // Se por algum motivo todas foram desativadas, usa todas
+        if (emocoesAtivas.Count == 0)
+            emocoesAtivas = todasEmocoes.ToList();
+
+        // Guarda no campo para uso no resto do script
+        emocaoConfiguradas = emocoesAtivas;
+    }
+
+    public List<string> emocaoConfiguradas { get; private set; }
 
     void CriarFilaDePerguntas()
     {
         List<Pergunta> listaFinal = new List<Pergunta>();
         int qtdEmocoes = emocaoConfiguradas.Count;
 
-        // Define quantas perguntas por emoção
+        // Distribuição para sempre ter 6 perguntas no total
         Dictionary<int, int[]> distribuicao = new Dictionary<int, int[]>
         {
             {1, new int[] {6}},
@@ -59,7 +82,7 @@ public class Fase1Controller : MonoBehaviour
         {
             acertos++;
             filaPerguntas.Dequeue();
-            
+
             if (acertos >= 6)
             {
                 VencerFase();
@@ -69,7 +92,6 @@ public class Fase1Controller : MonoBehaviour
         }
         else
         {
-            // Feedback de erro
             Debug.Log("Tente novamente");
         }
     }
@@ -79,7 +101,6 @@ public class Fase1Controller : MonoBehaviour
         if (filaPerguntas.Count > 0)
         {
             var pergunta = filaPerguntas.Peek();
-            // Aqui você mostra a imagem e opções na UI
             Debug.Log("Mostrando pergunta: " + pergunta.descricao);
         }
     }
@@ -87,7 +108,6 @@ public class Fase1Controller : MonoBehaviour
     void VencerFase()
     {
         Debug.Log("Parabéns! Você completou a fase.");
-        // Chamar tela de vitória
     }
 }
 
