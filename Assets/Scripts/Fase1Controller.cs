@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Fase1Controller : MonoBehaviour
 {
+    public Image imagemPergunta; // arraste no Inspector
+    private ImagensFaseManager imagensManager;
+
     public List<Pergunta> bancoPerguntas; // Todas as perguntas possíveis
     private Queue<Pergunta> filaPerguntas;
     private int acertos;
@@ -13,9 +17,20 @@ public class Fase1Controller : MonoBehaviour
 
     void Start()
     {
-        CarregarEmocoesConfiguradas();
-        CriarFilaDePerguntas();
-        MostrarProximaPergunta();
+        imagensManager = FindFirstObjectByType<ImagensFaseManager>();
+        TipoEmocao emocaoDaPergunta = TipoEmocao.Alegria;
+
+        // Pega uma imagem aleatória dessa emoção
+        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoDaPergunta);
+
+        // Troca a imagem no UI
+        if (imagem != null)
+            imagemPergunta.sprite = imagem;
+        else
+            Debug.LogWarning($"Sem imagens disponíveis para {emocaoDaPergunta}");
+        // CarregarEmocoesConfiguradas();
+        // CriarFilaDePerguntas();
+        // MostrarProximaPergunta();
     }
 
     void CarregarEmocoesConfiguradas()
@@ -96,7 +111,7 @@ public class Fase1Controller : MonoBehaviour
         }
     }
 
-    void MostrarProximaPergunta()
+    void    MostrarProximaPergunta()
     {
         if (filaPerguntas.Count > 0)
         {
