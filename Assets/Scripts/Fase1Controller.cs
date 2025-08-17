@@ -8,128 +8,115 @@ public class Fase1Controller : MonoBehaviour
     public Image imagemPergunta; // arraste no Inspector
     private ImagensFaseManager imagensManager;
 
-    public List<Pergunta> bancoPerguntas; // Todas as perguntas possíveis
-    private Queue<Pergunta> filaPerguntas;
-    private int acertos;
+    List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
+    private Dictionary<TipoEmocao, int> contadorEmocoes;
 
-    // Lista fixa de todas as emoções possíveis
-    private readonly string[] todasEmocoes = { "Alegria", "Tristeza", "Medo", "Raiva", "Surpresa", "Nojo" };
+    [Header("Configurações da fase")]
+    public int numeroDePerguntas = 6;
+    private int perguntasRespondidas = 0;
+    private TipoEmocao emocaoAtualPergunta; // emoção correta da pergunta atual
 
     void Start()
     {
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
-        TipoEmocao emocaoDaPergunta = TipoEmocao.Alegria;
 
-        // Pega uma imagem aleatória dessa emoção
-        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoDaPergunta);
+        emocoesAtivas = ObterEmocoesAtivas();
+
+        // Inicializa contador
+        contadorEmocoes = new Dictionary<TipoEmocao, int>();
+        foreach (var emocao in emocoesAtivas)
+            contadorEmocoes[emocao] = 0;
+
+        ProximaPergunta();
+    }
+
+    private List<TipoEmocao> ObterEmocoesAtivas()
+    {
+        var emocoesAtivas = new List<TipoEmocao>();
+
+        // Recupera a string salva no PlayerPrefs (emoções desativadas)
+        string desativadasStr = PlayerPrefs.GetString("EmocoesDesativadas", "");
+        var desativadas = new HashSet<int>();
+
+        if (!string.IsNullOrEmpty(desativadasStr))
+        {
+            // Transforma "0,1,2" em lista de ints
+            desativadas = desativadasStr
+                .Split(',')
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(int.Parse)
+                .ToHashSet();
+        }
+
+        // Agora percorre todas as emoções do enum
+        foreach (TipoEmocao emocao in System.Enum.GetValues(typeof(TipoEmocao)))
+        {
+            if (!desativadas.Contains((int)emocao))
+                emocoesAtivas.Add(emocao);
+        }
+
+        return emocoesAtivas;
+    }
+
+    private void ProximaPergunta()
+    {
+        if (perguntasRespondidas >= numeroDePerguntas)
+        {
+            EncerrarFase();
+            return;
+        }
+
+        // Não deve permitir por padrão nas configurações
+        if (emocoesAtivas.Count == 0)
+        {
+            Debug.LogWarning("Nenhuma emoção ativa!");
+            return;
+        }
+
+        // Descobre o menor número de vezes usado
+        int minimo = contadorEmocoes.Values.Min();
+
+        // Filtra todas as emoções que têm esse valor mínimo
+        var candidatas = contadorEmocoes
+            .Where(kvp => kvp.Value == minimo)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        // Escolhe aleatoriamente entre as candidatas
+        emocaoAtualPergunta = candidatas[Random.Range(0, candidatas.Count)];
+
+        // Marca que foi usada
+        contadorEmocoes[emocaoAtualPergunta]++;
+
+        // Pega imagem aleatória dessa emoção
+        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAtualPergunta);
 
         // Troca a imagem no UI
         if (imagem != null)
             imagemPergunta.sprite = imagem;
         else
-            Debug.LogWarning($"Sem imagens disponíveis para {emocaoDaPergunta}");
-        // CarregarEmocoesConfiguradas();
-        // CriarFilaDePerguntas();
-        // MostrarProximaPergunta();
+            Debug.LogWarning($"Sem imagens disponíveis para {emocaoAtualPergunta}");
     }
 
-    void CarregarEmocoesConfiguradas()
+    public void Responder(int emocaoIndex)
     {
-        // Recupera do PlayerPrefs as emoções ativas
-        List<string> emocoesAtivas = new List<string>();
+        // Converte o índice para o enum TipoEmocao
+        TipoEmocao emocaoEscolhida = (TipoEmocao)emocaoIndex;
 
-        foreach (var emocao in todasEmocoes)
+        if (emocaoEscolhida == emocaoAtualPergunta)
         {
-            if (PlayerPrefs.GetInt("Emocao_" + emocao, 1) == 1) // 1 = ativa, 0 = desativada
-                emocoesAtivas.Add(emocao);
-        }
-
-        // Se por algum motivo todas foram desativadas, usa todas
-        if (emocoesAtivas.Count == 0)
-            emocoesAtivas = todasEmocoes.ToList();
-
-        // Guarda no campo para uso no resto do script
-        emocaoConfiguradas = emocoesAtivas;
-    }
-
-    public List<string> emocaoConfiguradas { get; private set; }
-
-    void CriarFilaDePerguntas()
-    {
-        List<Pergunta> listaFinal = new List<Pergunta>();
-        int qtdEmocoes = emocaoConfiguradas.Count;
-
-        // Distribuição para sempre ter 6 perguntas no total
-        Dictionary<int, int[]> distribuicao = new Dictionary<int, int[]>
-        {
-            {1, new int[] {6}},
-            {2, new int[] {3,3}},
-            {3, new int[] {2,2,2}},
-            {4, new int[] {2,2,1,1}},
-            {5, new int[] {2,1,1,1,1}},
-            {6, new int[] {1,1,1,1,1,1}}
-        };
-
-        int[] qtdPorEmocao = distribuicao[qtdEmocoes];
-
-        // Monta a lista final
-        for (int i = 0; i < qtdEmocoes; i++)
-        {
-            var perguntasDaEmocao = bancoPerguntas
-                .Where(p => p.emocao == emocaoConfiguradas[i])
-                .OrderBy(x => Random.value)
-                .Take(qtdPorEmocao[i])
-                .ToList();
-
-            listaFinal.AddRange(perguntasDaEmocao);
-        }
-
-        // Embaralha todas
-        listaFinal = listaFinal.OrderBy(x => Random.value).ToList();
-        filaPerguntas = new Queue<Pergunta>(listaFinal);
-    }
-
-    public void Responder(string emocaoEscolhida)
-    {
-        var perguntaAtual = filaPerguntas.Peek();
-
-        if (perguntaAtual.emocao == emocaoEscolhida)
-        {
-            acertos++;
-            filaPerguntas.Dequeue();
-
-            if (acertos >= 6)
-            {
-                VencerFase();
-                return;
-            }
-            MostrarProximaPergunta();
+            Debug.Log("Resposta correta!");
+            ProximaPergunta();
         }
         else
         {
-            Debug.Log("Tente novamente");
+            Debug.Log("Resposta incorreta, tente novamente.");
+            // Não avança, fica na mesma pergunta
         }
     }
-
-    void    MostrarProximaPergunta()
+    
+    private void EncerrarFase()
     {
-        if (filaPerguntas.Count > 0)
-        {
-            var pergunta = filaPerguntas.Peek();
-            Debug.Log("Mostrando pergunta: " + pergunta.descricao);
-        }
+        Debug.Log("Fim da fase! Todas as perguntas foram feitas.");
     }
-
-    void VencerFase()
-    {
-        Debug.Log("Parabéns! Você completou a fase.");
-    }
-}
-
-[System.Serializable]
-public class Pergunta
-{
-    public string descricao;
-    public Sprite imagem;
-    public string emocao;
 }

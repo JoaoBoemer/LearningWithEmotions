@@ -184,10 +184,6 @@ MonoBehaviour:
   - {fileID: 865910863}
   barClosed: {fileID: 21300000, guid: 5a9c37cc51eafbb4da6c2936361d9df1, type: 3}
   barOpen: {fileID: 21300000, guid: 56dee773fb80b134685fccd2d48df93a, type: 3}
-  nomeFase1: 
-  nomeFase2: 
-  nomeFase3: 
-  nomeFase4: 
 --- !u!114 &9284562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4778,7 +4774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1500710159
 RectTransform:
   m_ObjectHideFlags: 0
