@@ -20,7 +20,8 @@ public class ImagensFaseManager : MonoBehaviour
             if (GameSettings.EmocaoDesativada(emocao))
                 continue;
 
-            Sprite[] sprites = Resources.LoadAll<Sprite>($"Emocoes/{emocao}/{pastaFase}");
+            Debug.Log($"Pasta: {pastaFase}/Perguntas/{emocao}");
+            Sprite[] sprites = Resources.LoadAll<Sprite>($"{pastaFase}/Perguntas/{emocao}");
             imagensPorEmocao[emocao] = new List<Sprite>(sprites);
         }
     }
