@@ -32,9 +32,16 @@ public class CameraCapture : MonoBehaviour
             }
         }
 
-        if(webcamTexture == null)
+        if (webcamTexture == null)
         {
-            Debug.Log("Unable to found front camera");
+            for (int i = 0; i < devices.Length; i++)
+            {
+                webcamTexture = new WebCamTexture(devices[i].name, Screen.width, Screen.height);
+            }
+        }
+
+        if (webcamTexture == null){
+            Debug.Log("Não foi possível encontrar uma camera");
             return;
         }
 

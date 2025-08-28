@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Globalization;
 using Unity.Barracuda;
 using System;
 using System.Collections;
 using System.Linq;
 using System.IO;
+using TMPro;
 
 public class EmotionDetector : MonoBehaviour
 {
@@ -12,9 +14,21 @@ public class EmotionDetector : MonoBehaviour
     private Model runtimeModel;
     private IWorker worker;
     private WebCamTexture webcamTexture; // Não inicializa aqui
+    public int imageSizeX = 64;
+    public int imageSizeY = 64;
     string[] emotionLabels = new string[] {
-        "Feliz", "Triste", "Raiva", "Surpresa", "Medo", "Desprezo", "Neutral"
+        "Neutro", "Alegria", "Surpresa", "Tristeza", "Raiva", "Desgosto", "Medo", "Desprezo"
     };
+
+    public TextMeshProUGUI labelEmocao;
+    public TextMeshProUGUI labelNeutro;
+    public TextMeshProUGUI labelAlegria;
+    public TextMeshProUGUI labelTristeza;
+    public TextMeshProUGUI labelSurpresa;
+    public TextMeshProUGUI labelRaiva;
+    public TextMeshProUGUI labelDesgosto;
+    public TextMeshProUGUI labelMedo;
+    public TextMeshProUGUI labelDesprezo;
 
     void Start()
     {
@@ -34,8 +48,6 @@ public class EmotionDetector : MonoBehaviour
         {
             yield return null; // Aguarda um frame
         }
-
-        webcamTexture = CameraCapture.instance.GetCameraTexture();
 
         StartCoroutine(PredictEmotionRoutine());
     }
@@ -57,58 +69,78 @@ public class EmotionDetector : MonoBehaviour
             tempTexture.SetPixels(webcamTexture.GetPixels());
             tempTexture.Apply();
 
-            // Criar uma textura com o tamanho esperado pelo modelo (48x48)
-            Texture2D texture = ResizeTexture(tempTexture, 48, 48);
+            // Criar uma textura com o tamanho esperado pelo modelo
+            Texture2D texture = ResizeTexture(tempTexture, imageSizeX, imageSizeY);
 
             // Converter a imagem para escala de cinza
             Color[] pixels = texture.GetPixels();
             float[] grayscalePixels = new float[pixels.Length];
-            
+
             for (int i = 0; i < pixels.Length; i++)
             {
-                grayscalePixels[i] = pixels[i].grayscale; // Calcula a média RGB para obter tons de cinza
+                grayscalePixels[i] = pixels[i].grayscale*255; // Calcula a média RGB para obter tons de cinza
             }
+            
+            // float[] grayscalePixels = ResizeToGrayArray(tempTexture, 64, 64);
 
-            SavePixelsToCSV(grayscalePixels, "grayscalePixels.csv");
+            // SavePixelsToCSV(grayscalePixels, "gray.csv", imageSizeX);
 
-            Tensor inputTensor = new Tensor(new TensorShape(1, 48, 48, 1), grayscalePixels);
+            Tensor inputTensor = new Tensor(1, imageSizeX, imageSizeY, 1, grayscalePixels);
 
             // Fazer a inferência
             worker.Execute(inputTensor);
             Tensor outputTensor = worker.PeekOutput();
 
-            Debug.Log("Dimensão do tensor de saída: " + outputTensor.shape.ToString());
-
-            Debug.Log("Saída do modelo (Unity): " + outputTensor.ToString());
-
             // Obter os valores do tensor de saída
-            float[] predictions = new float[7]; // Para 7 emoções
-            for (int i = 0; i < 7; i++)
+            float[] predictions = new float[8]; // Para 8 emoções
+            for (int i = 0; i < 8; i++)
             {
                 predictions[i] = outputTensor[0, 0, 0, i]; // Cada valor para cada emoção
-            }
-
-            float sum = predictions.Sum();
-            if (Math.Abs(sum - 1.0f) > 0.1f) // Permite uma pequena margem de erro
-            {
-                Debug.LogWarning($"A soma das probabilidades é inesperada: {sum}");
-            }
-
-            // Exibir todas as probabilidades de emoções
-            for (int i = 0; i < predictions.Length; i++)
-            {
-                Debug.Log(emotionLabels[i] + ": " + predictions[i]);
             }
 
             // Encontrar o índice da maior probabilidade
             int maxIndex = Array.IndexOf(predictions, predictions.Max());
 
             // Exibir o resultado
-            Debug.Log("Emoção Detectada: " + emotionLabels[maxIndex]);
+            if(maxIndex == 0)
+                labelEmocao.text = "Não detectado";
+            else
+                labelEmocao.text = emotionLabels[maxIndex];
+
+            labelNeutro.text = predictions[0].ToString();
+            labelAlegria.text = predictions[1].ToString();
+            labelSurpresa.text = predictions[2].ToString();
+            labelTristeza.text = predictions[3].ToString();
+            labelRaiva.text = predictions[4].ToString();
+            labelDesgosto.text = predictions[5].ToString();
+            labelMedo.text = predictions[6].ToString();
+            labelDesprezo.text = predictions[7].ToString();
 
             inputTensor.Dispose();
             outputTensor.Dispose();
         }
+    }
+
+    public float[] ResizeToGrayArray(Texture2D source, int width, int height)
+    {
+        float[] grayData = new float[width * height];
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                // pega cor da imagem original redimensionada
+                Color c = source.GetPixelBilinear((float)x / width, (float)y / height);
+
+                // converte para escala de cinza
+                float gray = (float)Math.Round(c.grayscale * 255, 0);
+
+                // salva no array (linha major order)
+                grayData[y * width + x] = gray;
+            }
+        }
+
+        return grayData;
     }
 
     Texture2D ResizeTexture(Texture2D source, int width, int height)
@@ -131,8 +163,8 @@ public class EmotionDetector : MonoBehaviour
 
         return resizedTexture;
     }
-    
-    void SavePixelsToCSV(float[] grayscalePixels, string fileName, int width = 48)
+
+    void SavePixelsToCSV(float[] grayscalePixels, string fileName, int width)
     {
         // Criar o caminho do arquivo
         string path = Application.persistentDataPath + "/" + fileName;
@@ -144,7 +176,7 @@ public class EmotionDetector : MonoBehaviour
             for (int i = 0; i < grayscalePixels.Length; i++)
             {
                 writer.Write(grayscalePixels[i].ToString(ci));
-                if ((i + 1) % width == 0) // A cada 48 pixels (tamanho da imagem 48x48), pular uma linha
+                if ((i + 1) % width == 0)
                     writer.WriteLine();
                 else
                     writer.Write(";");
