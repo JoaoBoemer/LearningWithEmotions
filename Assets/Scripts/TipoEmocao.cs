@@ -5,5 +5,6 @@ public enum TipoEmocao
     Medo,
     Raiva,
     Surpresa,
-    Nojo
+    Nojo,
+    Neutro
 }

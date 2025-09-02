@@ -10,6 +10,7 @@ using TMPro;
 
 public class EmotionDetector : MonoBehaviour
 {
+    public Fase3Controller faseEmocoes; // arraste no Inspector a referência
     public NNModel modelAsset;
     private Model runtimeModel;
     private IWorker worker;
@@ -69,6 +70,7 @@ public class EmotionDetector : MonoBehaviour
             tempTexture.SetPixels(webcamTexture.GetPixels());
             tempTexture.Apply();
 
+            /*
             // Criar uma textura com o tamanho esperado pelo modelo
             Texture2D texture = ResizeTexture(tempTexture, imageSizeX, imageSizeY);
 
@@ -80,9 +82,10 @@ public class EmotionDetector : MonoBehaviour
             {
                 grayscalePixels[i] = pixels[i].grayscale*255; // Calcula a média RGB para obter tons de cinza
             }
-            
-            // float[] grayscalePixels = ResizeToGrayArray(tempTexture, 64, 64);
+            */
 
+            float[] grayscalePixels = ResizeToGrayArray(tempTexture, 64, 64);
+            
             // SavePixelsToCSV(grayscalePixels, "gray.csv", imageSizeX);
 
             Tensor inputTensor = new Tensor(1, imageSizeX, imageSizeY, 1, grayscalePixels);
@@ -98,7 +101,9 @@ public class EmotionDetector : MonoBehaviour
                 predictions[i] = outputTensor[0, 0, 0, i]; // Cada valor para cada emoção
             }
 
-            // Encontrar o índice da maior probabilidade
+            // Teste
+            predictions[0] = -1;
+
             int maxIndex = Array.IndexOf(predictions, predictions.Max());
 
             // Exibir o resultado
@@ -106,6 +111,12 @@ public class EmotionDetector : MonoBehaviour
                 labelEmocao.text = "Não detectado";
             else
                 labelEmocao.text = emotionLabels[maxIndex];
+
+            // ATUALIZA A FASE -> só se não for neutro
+            if (maxIndex != 0 && faseEmocoes != null)
+            {
+                faseEmocoes.VerificarEmocao(conversorEmocaoEnum(maxIndex));
+            }
 
             labelNeutro.text = predictions[0].ToString();
             labelAlegria.text = predictions[1].ToString();
@@ -184,6 +195,27 @@ public class EmotionDetector : MonoBehaviour
         }
 
         Debug.Log("Arquivo CSV salvo em: " + path);
+    }
+
+    TipoEmocao conversorEmocaoEnum(int emocao)
+    {
+        switch (emocao)
+        {
+            case 1:
+                return TipoEmocao.Alegria;
+            case 2:
+                return TipoEmocao.Surpresa;
+            case 3:
+                return TipoEmocao.Tristeza;
+            case 4:
+                return TipoEmocao.Raiva;
+            case 5:
+                return TipoEmocao.Nojo;
+            case 6:
+                return TipoEmocao.Medo;
+            default:
+                return TipoEmocao.Neutro;
+        }
     }
 
     void OnDestroy()
