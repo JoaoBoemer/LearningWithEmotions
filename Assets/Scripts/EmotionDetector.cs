@@ -1,4 +1,114 @@
 using UnityEngine;
+using UnityEngine.Networking;
+using System.Collections;
+
+public class EmotionDetector : MonoBehaviour
+{
+    public GeminiClient geminiClient;
+    private string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    public Fase3Controller faseEmocoes;
+    private WebCamTexture webcamTexture;
+
+    public void Start()
+    {
+        webcamTexture = CameraCapture.instance.GetCameraTexture();
+
+        StartCoroutine(PredictEmotion((emotion) =>
+        {
+            Debug.Log("Emoção detectada: " + emotion);
+        }));
+    }
+
+    public IEnumerator PredictEmotion(System.Action<string> onComplete)
+    {
+        yield return new WaitForSeconds(5f);
+        
+        string apiKey = geminiClient.GetApiKey();
+
+        Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
+        tempTexture.SetPixels(webcamTexture.GetPixels());
+        tempTexture.Apply();
+
+        // 1. Converte a textura para bytes JPEG e depois para base64
+        byte[] imageBytes = tempTexture.EncodeToJPG();
+        string base64Image = System.Convert.ToBase64String(imageBytes);
+
+        // 2. Cria o prompt de texto
+        string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo.";
+
+        // 3. Cria o corpo da requisição JSON com texto e imagem
+        string requestBody = "{" +
+            "\"contents\": [" +
+                "{" +
+                    "\"parts\": [" +
+                        "{\"text\": \"" + prompt + "\"}," +
+                        "{\"inline_data\": {" +
+                            "\"mime_type\": \"image/jpeg\"," +
+                            "\"data\": \"" + base64Image + "\"" +
+                        "}}" +
+                    "]" +
+                "}" +
+            "]" +
+        "}";
+
+        Debug.Log("API: " + apiKey);
+        Debug.Log("Base64 Img: " + base64Image);
+
+        using (UnityWebRequest www = new UnityWebRequest(apiUrl + "?key=" + apiKey, "POST"))
+        {
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(requestBody);
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Erro na requisição: " + www.error);
+                onComplete?.Invoke("Erro");
+            }
+            else
+            {
+                string responseText = www.downloadHandler.text;
+                Debug.Log(responseText);
+                // Processar o JSON da resposta para extrair a emoção.
+                // A resposta pode ser um JSON complexo, então você precisará de uma biblioteca como o JsonUtility para analisá-la.
+                // Por exemplo, você pode buscar a parte do texto que contém a emoção.
+
+                // Exemplo simplificado:
+                // supondo que a resposta seja {"candidates": [{"content": {"parts": [{"text": "felicidade"}]}}]}
+                string detectedEmotion = "Emoção não detectada"; // Lógica de processamento aqui
+
+                onComplete?.Invoke(detectedEmotion);
+                // faseEmocoes.VerificarEmocao(conversorEmocaoEnum(0));
+            }
+        }
+    }
+    
+    TipoEmocao conversorEmocaoEnum(int emocao)
+    {
+        switch (emocao)
+        {
+            case 1:
+                return TipoEmocao.Alegria;
+            case 2:
+                return TipoEmocao.Surpresa;
+            case 3:
+                return TipoEmocao.Tristeza;
+            case 4:
+                return TipoEmocao.Raiva;
+            case 5:
+                return TipoEmocao.Nojo;
+            case 6:
+                return TipoEmocao.Medo;
+            default:
+                return TipoEmocao.Neutro;
+        }
+    }
+}
+/*
+using UnityEngine;
 using UnityEngine.UI;
 using System.Globalization;
 using Unity.Barracuda;
@@ -70,7 +180,6 @@ public class EmotionDetector : MonoBehaviour
             tempTexture.SetPixels(webcamTexture.GetPixels());
             tempTexture.Apply();
 
-            /*
             // Criar uma textura com o tamanho esperado pelo modelo
             Texture2D texture = ResizeTexture(tempTexture, imageSizeX, imageSizeY);
 
@@ -82,9 +191,10 @@ public class EmotionDetector : MonoBehaviour
             {
                 grayscalePixels[i] = pixels[i].grayscale*255; // Calcula a média RGB para obter tons de cinza
             }
-            */
 
-            float[] grayscalePixels = ResizeToGrayArray(tempTexture, 64, 64);
+            // SavePixelsToCSV(grayscalePixels, "gray.csv", imageSizeX);
+
+            // float[] grayscalePixels = ResizeToGrayArray(tempTexture, 64, 64);
             
             // SavePixelsToCSV(grayscalePixels, "gray.csv", imageSizeX);
 
@@ -101,7 +211,7 @@ public class EmotionDetector : MonoBehaviour
                 predictions[i] = outputTensor[0, 0, 0, i]; // Cada valor para cada emoção
             }
 
-            // Teste
+            // Teste para não detectar neutro.
             predictions[0] = -1;
 
             int maxIndex = Array.IndexOf(predictions, predictions.Max());
@@ -197,29 +307,9 @@ public class EmotionDetector : MonoBehaviour
         Debug.Log("Arquivo CSV salvo em: " + path);
     }
 
-    TipoEmocao conversorEmocaoEnum(int emocao)
-    {
-        switch (emocao)
-        {
-            case 1:
-                return TipoEmocao.Alegria;
-            case 2:
-                return TipoEmocao.Surpresa;
-            case 3:
-                return TipoEmocao.Tristeza;
-            case 4:
-                return TipoEmocao.Raiva;
-            case 5:
-                return TipoEmocao.Nojo;
-            case 6:
-                return TipoEmocao.Medo;
-            default:
-                return TipoEmocao.Neutro;
-        }
-    }
-
     void OnDestroy()
     {
         worker.Dispose();
     }
 }
+*/
