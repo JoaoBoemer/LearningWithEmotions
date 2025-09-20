@@ -5,14 +5,13 @@ using UnityEngine;
 
 public class Fase3Controller : MonoBehaviour
 {
-    public TextMeshProUGUI textoEmocaoAtual; // UI para mostrar a emoção alvo
-    public TextMeshProUGUI textoPontuacao; // UI para mostrar a pontuação atual
+    public TextMeshProUGUI textoEmocaoAlvo; // UI para mostrar a emoção alvo
     public TextMeshProUGUI textoFim; // UI para mostrar mensagem final
+    public TextMeshProUGUI textoEmocaoDetectada; // UI para mostrar a emoção alvo
+    private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
-    private List<string> emocoes = new List<string> { "Alegria", "Surpresa", "Tristeza", "Raiva", "Nojo", "Medo" };
     private int indiceAtual = 0;
     private int pontos = 0;
-    private TipoEmocao emocaoAtual;
 
     void Start()
     {
@@ -24,15 +23,10 @@ public class Fase3Controller : MonoBehaviour
     // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
     public void VerificarEmocao(TipoEmocao emocaoDetectada)
     {
-        if (emocaoDetectada == emocaoAtual)
+        textoEmocaoDetectada.text = emocaoDetectada.ToString();
+        if (emocaoDetectada == emocaoAlvo)
         {
-            pontos++;
-            textoPontuacao.text = "Pontos: " + pontos;
-
-            if (pontos >= 5)
-            {
-                proximaEmocao();
-            }
+            proximaEmocao();
         }
     }
 
@@ -40,15 +34,12 @@ public class Fase3Controller : MonoBehaviour
     {
         if (indiceAtual < emocoesAtivas.Count)
         {
-            emocaoAtual = emocoesAtivas[Random.Range(0, emocoesAtivas.Count)];
-            pontos = 0;
-            textoPontuacao.text = "Pontos: 0";
-            textoEmocaoAtual.text = "Mostre: " + emocaoAtual;
+            emocaoAlvo = emocoesAtivas[Random.Range(0, emocoesAtivas.Count)];
+            textoEmocaoAlvo.text = "Mostre: " + emocaoAlvo;
         }
         else
         {
-            textoEmocaoAtual.gameObject.SetActive(false);
-            textoPontuacao.gameObject.SetActive(false);
+            textoEmocaoAlvo.gameObject.SetActive(false);
             textoFim.gameObject.SetActive(true);
             textoFim.text = "Parabéns! Você completou todas as emoções.";
         }

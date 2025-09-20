@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using TMPro;
 
 public class EmotionDetector : MonoBehaviour
 {
@@ -9,98 +11,139 @@ public class EmotionDetector : MonoBehaviour
     public Fase3Controller faseEmocoes;
     private WebCamTexture webcamTexture;
 
+    [Serializable]
+    public class GeminiResponse
+    {
+        public Candidate[] candidates;
+    }
+
+    [Serializable]
+    public class Candidate
+    {
+        public Content content;
+        public string finishReason;
+        public float avgLogprobs;
+    }
+
+    [Serializable]
+    public class Content
+    {
+        public Part[] parts;
+        public string role;
+    }
+
+    [Serializable]
+    public class Part
+    {
+        public string text;
+    }
+
     public void Start()
     {
         webcamTexture = CameraCapture.instance.GetCameraTexture();
 
         StartCoroutine(PredictEmotion((emotion) =>
         {
-            Debug.Log("Emoção detectada: " + emotion);
+            faseEmocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
         }));
     }
 
     public IEnumerator PredictEmotion(System.Action<string> onComplete)
     {
-        yield return new WaitForSeconds(5f);
-        
-        string apiKey = geminiClient.GetApiKey();
-
-        Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
-        tempTexture.SetPixels(webcamTexture.GetPixels());
-        tempTexture.Apply();
-
-        // 1. Converte a textura para bytes JPEG e depois para base64
-        byte[] imageBytes = tempTexture.EncodeToJPG();
-        string base64Image = System.Convert.ToBase64String(imageBytes);
-
-        // 2. Cria o prompt de texto
-        string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo.";
-
-        // 3. Cria o corpo da requisição JSON com texto e imagem
-        string requestBody = "{" +
-            "\"contents\": [" +
-                "{" +
-                    "\"parts\": [" +
-                        "{\"text\": \"" + prompt + "\"}," +
-                        "{\"inline_data\": {" +
-                            "\"mime_type\": \"image/jpeg\"," +
-                            "\"data\": \"" + base64Image + "\"" +
-                        "}}" +
-                    "]" +
-                "}" +
-            "]" +
-        "}";
-
-        Debug.Log("API: " + apiKey);
-        Debug.Log("Base64 Img: " + base64Image);
-
-        using (UnityWebRequest www = new UnityWebRequest(apiUrl + "?key=" + apiKey, "POST"))
+        while (true)
         {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(requestBody);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            www.SetRequestHeader("Content-Type", "application/json");
+            yield return new WaitForSeconds(10f);
 
-            yield return www.SendWebRequest();
+            string apiKey = geminiClient.GetApiKey();
 
-            if (www.result != UnityWebRequest.Result.Success)
+            Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
+            tempTexture.SetPixels(webcamTexture.GetPixels());
+            tempTexture.Apply();
+
+            // 1. Converte a textura para bytes JPEG e depois para base64
+            byte[] imageBytes = tempTexture.EncodeToJPG();
+            string base64Image = System.Convert.ToBase64String(imageBytes);
+
+            // 1.1 Teste para verificar a imagem
+            // string path = Application.persistentDataPath + "/" + "Teste";
+            // System.IO.File.WriteAllBytes(path, imageBytes);
+
+            // 2. Cria o prompt de texto
+            string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo. Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
+
+            // 3. Cria o corpo da requisição JSON com texto e imagem
+            string requestBody = "{" +
+                "\"contents\": [" +
+                    "{" +
+                        "\"parts\": [" +
+                            "{\"text\": \"" + prompt + "\"}," +
+                            "{\"inline_data\": {" +
+                                "\"mime_type\": \"image/jpeg\"," +
+                                "\"data\": \"" + base64Image + "\"" +
+                            "}}" +
+                        "]" +
+                    "}" +
+                "]" +
+            "}";
+
+            using (UnityWebRequest www = new UnityWebRequest(apiUrl + "?key=" + apiKey, "POST"))
             {
-                Debug.LogError("Erro na requisição: " + www.error);
-                onComplete?.Invoke("Erro");
-            }
-            else
-            {
-                string responseText = www.downloadHandler.text;
-                Debug.Log(responseText);
-                // Processar o JSON da resposta para extrair a emoção.
-                // A resposta pode ser um JSON complexo, então você precisará de uma biblioteca como o JsonUtility para analisá-la.
-                // Por exemplo, você pode buscar a parte do texto que contém a emoção.
+                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(requestBody);
+                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
 
-                // Exemplo simplificado:
-                // supondo que a resposta seja {"candidates": [{"content": {"parts": [{"text": "felicidade"}]}}]}
-                string detectedEmotion = "Emoção não detectada"; // Lógica de processamento aqui
+                yield return www.SendWebRequest();
 
-                onComplete?.Invoke(detectedEmotion);
-                // faseEmocoes.VerificarEmocao(conversorEmocaoEnum(0));
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError("Erro na requisição: " + www.error);
+                    onComplete?.Invoke("Erro");
+                }
+                else
+                {
+                    string responseText = www.downloadHandler.text;
+
+                    try
+                    {
+                        GeminiResponse response = JsonUtility.FromJson<GeminiResponse>(responseText);
+
+                        if (response != null && response.candidates != null && response.candidates.Length > 0)
+                        {
+                            string emotion = response.candidates[0].content.parts[0].text;
+                            Debug.Log("Emoção detectada: " + emotion); // Deve mostrar "Raiva"
+
+                            onComplete?.Invoke(emotion);
+                        }
+                        else
+                        {
+                            Debug.LogError("Resposta da API não contém um resultado válido.");
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogError("Erro ao processar a resposta JSON: " + e.Message);
+                    }
+                }
             }
         }
     }
     
-    TipoEmocao conversorEmocaoEnum(int emocao)
+    TipoEmocao conversorEmocaoEnum(string emocao)
     {
         switch (emocao)
         {
-            case 1:
+            case "Alegria":
                 return TipoEmocao.Alegria;
-            case 2:
+            case "Surpresa":
                 return TipoEmocao.Surpresa;
-            case 3:
+            case "Tristeza":
                 return TipoEmocao.Tristeza;
-            case 4:
+            case "Raiva":
                 return TipoEmocao.Raiva;
-            case 5:
+            case "Nojo":
                 return TipoEmocao.Nojo;
-            case 6:
+            case "Medo":
                 return TipoEmocao.Medo;
             default:
                 return TipoEmocao.Neutro;
@@ -116,7 +159,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.IO;
-using TMPro;
+
 
 public class EmotionDetector : MonoBehaviour
 {
