@@ -51,7 +51,7 @@ public class Fase1Controller : MonoBehaviour
         // Agora percorre todas as emoções do enum
         foreach (TipoEmocao emocao in System.Enum.GetValues(typeof(TipoEmocao)))
         {
-            if (!desativadas.Contains((int)emocao))
+            if (!desativadas.Contains((int)emocao) && emocao != TipoEmocao.Neutro)
                 emocoesAtivas.Add(emocao);
         }
 

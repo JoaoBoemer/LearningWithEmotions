@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Fase3Controller : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Fase3Controller : MonoBehaviour
     public TextMeshProUGUI textoEmocaoDetectada; // UI para mostrar a emoção alvo
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
+    private ImagensFaseManager imagensManager;
+    public Image imagemPergunta; // arraste no Inspector
     private int indiceAtual = 0;
     private int pontos = 0;
 
@@ -17,6 +20,7 @@ public class Fase3Controller : MonoBehaviour
     {
         textoFim.gameObject.SetActive(false);
         emocoesAtivas = ObterEmocoesAtivas();
+        imagensManager = FindFirstObjectByType<ImagensFaseManager>();
         definirNovaEmocao();
     }
 
@@ -36,6 +40,10 @@ public class Fase3Controller : MonoBehaviour
         {
             emocaoAlvo = emocoesAtivas[Random.Range(0, emocoesAtivas.Count)];
             textoEmocaoAlvo.text = "Mostre: " + emocaoAlvo;
+            Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAlvo);
+
+            if (imagem != null)
+            imagemPergunta.sprite = imagem;
         }
         else
         {
@@ -66,7 +74,7 @@ public class Fase3Controller : MonoBehaviour
         // Agora percorre todas as emoções do enum
         foreach (TipoEmocao emocao in System.Enum.GetValues(typeof(TipoEmocao)))
         {
-            if (!desativadas.Contains((int)emocao))
+            if (!desativadas.Contains((int)emocao) && emocao != TipoEmocao.Neutro)
                 emocoesAtivas.Add(emocao);
         }
 
