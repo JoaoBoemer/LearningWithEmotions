@@ -14,7 +14,7 @@ public class Fase1Controller : MonoBehaviour
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
-    private TipoEmocao emocaoAtualPergunta; // emoção correta da pergunta atual
+    private TipoEmocao emocaoAlvo; // emoção correta da pergunta atual
 
     void Start()
     {
@@ -73,7 +73,35 @@ public class Fase1Controller : MonoBehaviour
             return;
         }
 
-        // Descobre o menor número de vezes usado
+        BuscarProximaEmocao();
+    }
+
+    public void Responder(int emocaoIndex)
+    {
+        // Converte o índice para o enum TipoEmocao
+        TipoEmocao emocaoEscolhida = (TipoEmocao)emocaoIndex;
+
+        if (emocaoEscolhida == emocaoAlvo)
+        {
+            Debug.Log("Resposta correta!");
+            perguntasRespondidas++;
+            ProximaPergunta();
+        }
+        else
+        {
+            Debug.Log("Resposta incorreta, tente novamente.");
+            // Não avança, fica na mesma pergunta
+        }
+    }
+
+    private void EncerrarFase()
+    {
+        Debug.Log("Fim da fase! Todas as perguntas foram feitas.");
+    }
+
+    private void BuscarProximaEmocao()
+    {
+                // Descobre o menor número de vezes usado
         int minimo = contadorEmocoes.Values.Min();
 
         // Filtra todas as emoções que têm esse valor mínimo
@@ -83,40 +111,18 @@ public class Fase1Controller : MonoBehaviour
             .ToList();
 
         // Escolhe aleatoriamente entre as candidatas
-        emocaoAtualPergunta = candidatas[Random.Range(0, candidatas.Count)];
+        emocaoAlvo = candidatas[Random.Range(0, candidatas.Count)];
 
         // Marca que foi usada
-        contadorEmocoes[emocaoAtualPergunta]++;
+        contadorEmocoes[emocaoAlvo]++;
 
         // Pega imagem aleatória dessa emoção
-        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAtualPergunta);
+        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAlvo);
 
         // Troca a imagem no UI
         if (imagem != null)
             imagemPergunta.sprite = imagem;
         else
-            Debug.LogWarning($"Sem imagens disponíveis para {emocaoAtualPergunta}");
-    }
-
-    public void Responder(int emocaoIndex)
-    {
-        // Converte o índice para o enum TipoEmocao
-        TipoEmocao emocaoEscolhida = (TipoEmocao)emocaoIndex;
-
-        if (emocaoEscolhida == emocaoAtualPergunta)
-        {
-            Debug.Log("Resposta correta!");
-            ProximaPergunta();
-        }
-        else
-        {
-            Debug.Log("Resposta incorreta, tente novamente.");
-            // Não avança, fica na mesma pergunta
-        }
-    }
-    
-    private void EncerrarFase()
-    {
-        Debug.Log("Fim da fase! Todas as perguntas foram feitas.");
+            Debug.LogWarning($"Sem imagens disponíveis para {emocaoAlvo}");
     }
 }

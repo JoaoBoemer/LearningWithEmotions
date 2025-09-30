@@ -53,7 +53,6 @@ public class EmotionDetector : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(10f);
-
             string apiKey = geminiClient.GetApiKey();
 
             Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
@@ -64,12 +63,10 @@ public class EmotionDetector : MonoBehaviour
             byte[] imageBytes = tempTexture.EncodeToJPG();
             string base64Image = System.Convert.ToBase64String(imageBytes);
 
-            // 1.1 Teste para verificar a imagem
-            // string path = Application.persistentDataPath + "/" + "Teste";
-            // System.IO.File.WriteAllBytes(path, imageBytes);
-
             // 2. Cria o prompt de texto
-            string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo. Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
+            string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. "
+            + "Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo."
+            + "Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
 
             // 3. Cria o corpo da requisição JSON com texto e imagem
             string requestBody = "{" +
@@ -111,7 +108,7 @@ public class EmotionDetector : MonoBehaviour
                         if (response != null && response.candidates != null && response.candidates.Length > 0)
                         {
                             string emotion = response.candidates[0].content.parts[0].text;
-                            Debug.Log("Emoção detectada: " + emotion); // Deve mostrar "Raiva"
+                            Debug.Log("Emoção detectada: " + emotion);
 
                             onComplete?.Invoke(emotion);
                         }

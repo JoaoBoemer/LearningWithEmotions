@@ -6,50 +6,41 @@ using UnityEngine.UI;
 
 public class Fase3Controller : MonoBehaviour
 {
-    public TextMeshProUGUI textoEmocaoAlvo; // UI para mostrar a emoção alvo
-    public TextMeshProUGUI textoFim; // UI para mostrar mensagem final
-    public TextMeshProUGUI textoEmocaoDetectada; // UI para mostrar a emoção alvo
+    public TextMeshProUGUI textoEmocaoAlvo;
+    public TextMeshProUGUI textoFim;
+    public TextMeshProUGUI textoEmocaoDetectada;
+    private ImagensFaseManager imagensManager;
+    public Image imagemPergunta;
+
+    [Header("Configurações da fase")]
+    public int numeroDePerguntas = 6;
+    private int perguntasRespondidas = 0;
+    private Dictionary<TipoEmocao, int> contadorEmocoes;
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
-    private ImagensFaseManager imagensManager;
-    public Image imagemPergunta; // arraste no Inspector
-    private int indiceAtual = 0;
-    private int pontos = 0;
 
     void Start()
     {
-        textoFim.gameObject.SetActive(false);
-        emocoesAtivas = ObterEmocoesAtivas();
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
-        definirNovaEmocao();
+
+        emocoesAtivas = ObterEmocoesAtivas();
+
+        numeroDePerguntas = emocoesAtivas.Count;
+
+        IniciarContador();
+
+        ProximaPergunta();
     }
 
     // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
     public void VerificarEmocao(TipoEmocao emocaoDetectada)
     {
         textoEmocaoDetectada.text = emocaoDetectada.ToString();
+
         if (emocaoDetectada == emocaoAlvo)
         {
-            proximaEmocao();
-        }
-    }
-
-    void definirNovaEmocao()
-    {
-        if (indiceAtual < emocoesAtivas.Count)
-        {
-            emocaoAlvo = emocoesAtivas[Random.Range(0, emocoesAtivas.Count)];
-            textoEmocaoAlvo.text = "Mostre: " + emocaoAlvo;
-            Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAlvo);
-
-            if (imagem != null)
-            imagemPergunta.sprite = imagem;
-        }
-        else
-        {
-            textoEmocaoAlvo.gameObject.SetActive(false);
-            textoFim.gameObject.SetActive(true);
-            textoFim.text = "Parabéns! Você completou todas as emoções.";
+            perguntasRespondidas++;
+            ProximaPergunta();
         }
     }
 
@@ -81,9 +72,45 @@ public class Fase3Controller : MonoBehaviour
         return emocoesAtivas;
     }
 
-    void proximaEmocao()
+    void ProximaPergunta()
     {
-        indiceAtual++;
-        definirNovaEmocao();
+        if (perguntasRespondidas >= numeroDePerguntas)
+        {
+            textoEmocaoAlvo.gameObject.SetActive(false);
+            textoFim.gameObject.SetActive(true);
+            textoFim.text = "Parabéns! Você completou todas as emoções.";
+            return;
+        }
+        
+        // Descobre o menor número de vezes usado
+        int minimo = contadorEmocoes.Values.Min();
+
+        // Filtra todas as emoções que têm esse valor mínimo
+        var candidatas = contadorEmocoes
+            .Where(kvp => kvp.Value == minimo)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        // Escolhe aleatoriamente entre as candidatas
+        emocaoAlvo = candidatas[Random.Range(0, candidatas.Count)];
+
+        // Marca que foi usada
+        contadorEmocoes[emocaoAlvo]++;
+
+        // Pega imagem aleatória dessa emoção
+        Sprite imagem = imagensManager.ObterImagemAleatoria(emocaoAlvo);
+
+        // Troca a imagem no UI
+        if (imagem != null)
+            imagemPergunta.sprite = imagem;
+        else
+            Debug.LogWarning($"Sem imagens disponíveis para {emocaoAlvo}");
+    }
+
+    private void IniciarContador()
+    {
+        contadorEmocoes = new Dictionary<TipoEmocao, int>();
+        foreach (var emocao in emocoesAtivas)
+            contadorEmocoes[emocao] = 0;
     }
 }

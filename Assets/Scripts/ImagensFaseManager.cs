@@ -14,14 +14,19 @@ public class ImagensFaseManager : MonoBehaviour
 
     void CarregarImagens()
     {
+        string caminhoPasta = "";
         foreach (TipoEmocao emocao in System.Enum.GetValues(typeof(TipoEmocao)))
         {
             // Se a emoção estiver desativada, pula
             if (GameSettings.EmocaoDesativada(emocao))
                 continue;
 
-            Debug.Log($"Pasta: {pastaFase}/Perguntas/{emocao}");
-            Sprite[] sprites = Resources.LoadAll<Sprite>($"{pastaFase}/Perguntas/{emocao}");
+            if (pastaFase == "Fase1")
+                caminhoPasta = $"{pastaFase}/Perguntas/{emocao}";
+            else
+                caminhoPasta = $"{pastaFase}/{emocao}";
+
+            Sprite[] sprites = Resources.LoadAll<Sprite>(caminhoPasta);
             imagensPorEmocao[emocao] = new List<Sprite>(sprites);
         }
     }
