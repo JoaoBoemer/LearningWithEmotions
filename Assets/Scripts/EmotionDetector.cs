@@ -65,7 +65,7 @@ public class EmotionDetector : MonoBehaviour
 
             // 2. Cria o prompt de texto
             string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. "
-            + "Responda apenas com o nome da emoção. As emoções podem ser: raiva, felicidade, tristeza, surpresa, medo ou nojo."
+            + "Responda apenas com o nome da emoção. As emoções podem ser: raiva, alegria, tristeza, surpresa, medo ou nojo."
             + "Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
 
             // 3. Cria o corpo da requisição JSON com texto e imagem
