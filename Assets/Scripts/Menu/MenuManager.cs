@@ -19,6 +19,7 @@ public class MenuManager : MonoBehaviour
         string nomeFase = "Fase" + faseId;
         SceneManager.LoadScene(nomeFase);
     }
+    
     public void Jogar()
     {
         painelMenuInicial.SetActive(false);
