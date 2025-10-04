@@ -7,6 +7,8 @@ public class Fase1Controller : MonoBehaviour
 {
     public Image imagemPergunta; // arraste no Inspector
     private ImagensFaseManager imagensManager;
+    [SerializeField] private GameObject painelTelaVitoria;
+    [SerializeField] private GameObject painelJogo;
 
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
     private Dictionary<TipoEmocao, int> contadorEmocoes;
@@ -15,12 +17,16 @@ public class Fase1Controller : MonoBehaviour
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
     private TipoEmocao emocaoAlvo; // emoção correta da pergunta atual
+    public StarManager starManager; // Referência ao seu StarManager
 
     void Start()
     {
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
 
         emocoesAtivas = ObterEmocoesAtivas();
+
+        starManager = FindFirstObjectByType<StarManager>(); 
+        starManager.ResetStars(); // Reseta as estrelas no início da fase
 
         // Inicializa contador
         contadorEmocoes = new Dictionary<TipoEmocao, int>();
@@ -83,8 +89,8 @@ public class Fase1Controller : MonoBehaviour
 
         if (emocaoEscolhida == emocaoAlvo)
         {
-            Debug.Log("Resposta correta!");
             perguntasRespondidas++;
+            starManager.AddStar();
             ProximaPergunta();
         }
         else
@@ -96,12 +102,13 @@ public class Fase1Controller : MonoBehaviour
 
     private void EncerrarFase()
     {
-        Debug.Log("Fim da fase! Todas as perguntas foram feitas.");
+        painelTelaVitoria.SetActive(true);
+        painelJogo.SetActive(false);
     }
 
     private void BuscarProximaEmocao()
     {
-                // Descobre o menor número de vezes usado
+        // Descobre o menor número de vezes usado
         int minimo = contadorEmocoes.Values.Min();
 
         // Filtra todas as emoções que têm esse valor mínimo
