@@ -12,12 +12,15 @@ public class Fase1Controller : MonoBehaviour
 
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
     private Dictionary<TipoEmocao, int> contadorEmocoes;
+    public Image personagem;
+    public Sprite pensandoSprite;
+    public Sprite erroSprite;
 
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
     private TipoEmocao emocaoAlvo; // emoção correta da pergunta atual
-    public StarManager starManager; // Referência ao seu StarManager
+    private StarManager starManager; // Referência ao seu StarManager
 
     void Start()
     {
@@ -89,14 +92,14 @@ public class Fase1Controller : MonoBehaviour
 
         if (emocaoEscolhida == emocaoAlvo)
         {
+            personagem.sprite = pensandoSprite;
             perguntasRespondidas++;
             starManager.AddStar();
             ProximaPergunta();
         }
         else
         {
-            Debug.Log("Resposta incorreta, tente novamente.");
-            // Não avança, fica na mesma pergunta
+            personagem.sprite = erroSprite;
         }
     }
 

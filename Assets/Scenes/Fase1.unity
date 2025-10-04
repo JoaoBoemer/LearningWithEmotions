@@ -612,7 +612,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -10}
+  m_AnchoredPosition: {x: 0.000061035156, y: 6}
   m_SizeDelta: {x: 1372.7, y: 122.900024}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &287648193
@@ -1437,8 +1437,10 @@ MonoBehaviour:
   imagemPergunta: {fileID: 1802107152}
   painelTelaVitoria: {fileID: 2068225310}
   painelJogo: {fileID: 111558292}
+  personagem: {fileID: 1260417590}
+  pensandoSprite: {fileID: 21300000, guid: cbfac9c302242c24cb3fdd40106917a1, type: 3}
+  erroSprite: {fileID: 21300000, guid: 2004e1a711d060e45950a64e0c390ed1, type: 3}
   numeroDePerguntas: 6
-  starManager: {fileID: 0}
 --- !u!1 &1010675478
 GameObject:
   m_ObjectHideFlags: 0
@@ -3274,10 +3276,6 @@ PrefabInstance:
     - target: {fileID: 6238560689639962945, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
       propertyPath: m_Name
       value: Vitoria
-      objectReference: {fileID: 0}
-    - target: {fileID: 6238560689639962945, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
