@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class Fase3Controller : MonoBehaviour
 {
-    public TextMeshProUGUI textoEmocaoAlvo;
-    public TextMeshProUGUI textoFim;
     public TextMeshProUGUI textoEmocaoDetectada;
     private ImagensFaseManager imagensManager;
     public Image imagemPergunta;
@@ -35,7 +33,8 @@ public class Fase3Controller : MonoBehaviour
     // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
     public void VerificarEmocao(TipoEmocao emocaoDetectada)
     {
-        textoEmocaoDetectada.text = emocaoDetectada.ToString();
+        if(textoEmocaoDetectada != null)
+            textoEmocaoDetectada.text = emocaoDetectada.ToString();
 
         if (emocaoDetectada == emocaoAlvo)
         {
@@ -76,9 +75,6 @@ public class Fase3Controller : MonoBehaviour
     {
         if (perguntasRespondidas >= numeroDePerguntas)
         {
-            textoEmocaoAlvo.gameObject.SetActive(false);
-            textoFim.gameObject.SetActive(true);
-            textoFim.text = "Parabéns! Você completou todas as emoções.";
             return;
         }
         
