@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 68774769}
   - component: {fileID: 68774768}
   m_Layer: 5
-  m_Name: txtFase1
+  m_Name: txtFase3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FASE  1
+  m_text: FASE  3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
@@ -2195,16 +2195,16 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1984455644}
   - {fileID: 1715032440}
   - {fileID: 1539755698}
+  - {fileID: 1984455644}
   - {fileID: 1492078408}
   m_Father: {fileID: 2058250293}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -95.935}
-  m_SizeDelta: {x: 1880, y: 845}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &579606727
 CanvasRenderer:
@@ -3356,7 +3356,7 @@ GameObject:
   - component: {fileID: 923352753}
   - component: {fileID: 923352752}
   m_Layer: 5
-  m_Name: txtFase2
+  m_Name: txtFase1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3401,7 +3401,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FASE  2
+  m_text: FASE  1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
@@ -5765,9 +5765,9 @@ RectTransform:
   - {fileID: 313097074}
   m_Father: {fileID: 579606726}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -745}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1880, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1492078409
@@ -5877,7 +5877,7 @@ GameObject:
   - component: {fileID: 1539755700}
   - component: {fileID: 1539755699}
   m_Layer: 5
-  m_Name: Fase3
+  m_Name: Fase2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5900,9 +5900,9 @@ RectTransform:
   - {fileID: 698244502}
   m_Father: {fileID: 579606726}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -530}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1880, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1539755699
@@ -5956,7 +5956,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -6011,7 +6011,7 @@ GameObject:
   - component: {fileID: 1660328643}
   - component: {fileID: 1660328642}
   m_Layer: 5
-  m_Name: txtFase3
+  m_Name: txtFase2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6056,7 +6056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FASE  3
+  m_text: FASE  2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
@@ -6148,7 +6148,7 @@ GameObject:
   - component: {fileID: 1715032442}
   - component: {fileID: 1715032441}
   m_Layer: 5
-  m_Name: Fase2
+  m_Name: Fase1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6171,9 +6171,9 @@ RectTransform:
   - {fileID: 1354435682}
   m_Father: {fileID: 579606726}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -315}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1880, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1715032441
@@ -6227,7 +6227,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7531,7 +7531,7 @@ GameObject:
   - component: {fileID: 1984455646}
   - component: {fileID: 1984455645}
   m_Layer: 5
-  m_Name: Fase1
+  m_Name: Fase3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7554,9 +7554,9 @@ RectTransform:
   - {fileID: 1070789351}
   m_Father: {fileID: 579606726}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1880, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1984455645
@@ -7610,7 +7610,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7965,7 +7965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2058250293
 RectTransform:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class DraggableEmoji : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private RectTransform rectTransform;
+    public RectTransform rectTransform;
     private Vector3 initialPosition;
     
     // Identifica qual emoção é este emoji (ex: "Raiva", "Felicidade")

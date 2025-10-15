@@ -10,6 +10,7 @@ public class EmotionDetector : MonoBehaviour
     private string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     public Fase3Controller faseEmocoes;
     private WebCamTexture webcamTexture;
+    public CameraCapture cameraCapture;
 
     [Serializable]
     public class GeminiResponse
@@ -40,7 +41,7 @@ public class EmotionDetector : MonoBehaviour
 
     public void Start()
     {
-        webcamTexture = CameraCapture.instance.GetCameraTexture();
+        webcamTexture = cameraCapture.GetCameraTexture();
 
         StartCoroutine(PredictEmotion((emotion) =>
         {
