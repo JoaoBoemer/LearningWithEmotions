@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
 
 public class EmotionDetector : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class EmotionDetector : MonoBehaviour
     public Fase3Controller faseEmocoes;
     private WebCamTexture webcamTexture;
     public CameraCapture cameraCapture;
+    private bool isProcessing = false;
+    public Button btnDetectEmotion;
 
     [Serializable]
     public class GeminiResponse
@@ -43,87 +46,93 @@ public class EmotionDetector : MonoBehaviour
     {
         webcamTexture = cameraCapture.GetCameraTexture();
 
-        StartCoroutine(PredictEmotion((emotion) =>
-        {
-            faseEmocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
-        }));
+        btnDetectEmotion.onClick.AddListener(() => StartCoroutine(PredictEmotion()));
     }
 
-    public IEnumerator PredictEmotion(System.Action<string> onComplete)
+    public IEnumerator PredictEmotion()
     {
-        while (true)
+        if (isProcessing)
+            yield break;
+
+        isProcessing = true;
+        btnDetectEmotion.interactable = false;
+
+        // yield return new WaitForSeconds(10f);
+        string apiKey = geminiClient.GetApiKey();
+
+        Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
+        tempTexture.SetPixels(webcamTexture.GetPixels());
+        tempTexture.Apply();
+
+        // 1. Converte a textura para bytes JPEG e depois para base64
+        byte[] imageBytes = tempTexture.EncodeToJPG();
+        string base64Image = System.Convert.ToBase64String(imageBytes);
+
+        // 2. Cria o prompt de texto
+        string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. "
+        + "Responda apenas com o nome da emoção. As emoções podem ser: raiva, alegria, tristeza, surpresa, medo ou nojo."
+        + "Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
+
+        // 3. Cria o corpo da requisição JSON com texto e imagem
+        string requestBody = "{" +
+            "\"contents\": [" +
+                "{" +
+                    "\"parts\": [" +
+                        "{\"text\": \"" + prompt + "\"}," +
+                        "{\"inline_data\": {" +
+                            "\"mime_type\": \"image/jpeg\"," +
+                            "\"data\": \"" + base64Image + "\"" +
+                        "}}" +
+                    "]" +
+                "}" +
+            "]" +
+        "}";
+
+        using (UnityWebRequest www = new UnityWebRequest(apiUrl + "?key=" + apiKey, "POST"))
         {
-            yield return new WaitForSeconds(10f);
-            string apiKey = geminiClient.GetApiKey();
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(requestBody);
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
 
-            Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
-            tempTexture.SetPixels(webcamTexture.GetPixels());
-            tempTexture.Apply();
+            yield return www.SendWebRequest();
 
-            // 1. Converte a textura para bytes JPEG e depois para base64
-            byte[] imageBytes = tempTexture.EncodeToJPG();
-            string base64Image = System.Convert.ToBase64String(imageBytes);
-
-            // 2. Cria o prompt de texto
-            string prompt = "Com base nesta imagem, descreva a emoção visível no rosto da pessoa. "
-            + "Responda apenas com o nome da emoção. As emoções podem ser: raiva, alegria, tristeza, surpresa, medo ou nojo."
-            + "Caso nenhuma pessoa seja detectada, responda apenas: 'Neutro'";
-
-            // 3. Cria o corpo da requisição JSON com texto e imagem
-            string requestBody = "{" +
-                "\"contents\": [" +
-                    "{" +
-                        "\"parts\": [" +
-                            "{\"text\": \"" + prompt + "\"}," +
-                            "{\"inline_data\": {" +
-                                "\"mime_type\": \"image/jpeg\"," +
-                                "\"data\": \"" + base64Image + "\"" +
-                            "}}" +
-                        "]" +
-                    "}" +
-                "]" +
-            "}";
-
-            using (UnityWebRequest www = new UnityWebRequest(apiUrl + "?key=" + apiKey, "POST"))
+            if (www.result != UnityWebRequest.Result.Success)
             {
-                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(requestBody);
-                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                www.downloadHandler = new DownloadHandlerBuffer();
-                www.SetRequestHeader("Content-Type", "application/json");
+                Debug.LogError("Erro na requisição: " + www.error);
+                faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                // onComplete?.Invoke("Erro");
+            }
+            else
+            {
+                string responseText = www.downloadHandler.text;
 
-                yield return www.SendWebRequest();
-
-                if (www.result != UnityWebRequest.Result.Success)
+                try
                 {
-                    Debug.LogError("Erro na requisição: " + www.error);
-                    onComplete?.Invoke("Erro");
+                    GeminiResponse response = JsonUtility.FromJson<GeminiResponse>(responseText);
+
+                    if (response != null && response.candidates != null && response.candidates.Length > 0)
+                    {
+                        string emotion = response.candidates[0].content.parts[0].text;
+                        Debug.Log("Emoção detectada: " + emotion);
+
+                        faseEmocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
+                    }
+                    else
+                    {
+                        Debug.LogError("Resposta da API não contém um resultado válido.");
+                        faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                    }
                 }
-                else
+                catch (System.Exception e)
                 {
-                    string responseText = www.downloadHandler.text;
-
-                    try
-                    {
-                        GeminiResponse response = JsonUtility.FromJson<GeminiResponse>(responseText);
-
-                        if (response != null && response.candidates != null && response.candidates.Length > 0)
-                        {
-                            string emotion = response.candidates[0].content.parts[0].text;
-                            Debug.Log("Emoção detectada: " + emotion);
-
-                            onComplete?.Invoke(emotion);
-                        }
-                        else
-                        {
-                            Debug.LogError("Resposta da API não contém um resultado válido.");
-                        }
-                    }
-                    catch (System.Exception e)
-                    {
-                        Debug.LogError("Erro ao processar a resposta JSON: " + e.Message);
-                    }
+                    Debug.LogError("Erro ao processar a resposta JSON: " + e.Message);
+                    faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
                 }
             }
+
+            isProcessing = false;
+            btnDetectEmotion.interactable = true;
         }
     }
     

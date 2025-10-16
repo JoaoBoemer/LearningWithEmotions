@@ -16,10 +16,19 @@ public class Fase3Controller : MonoBehaviour
     private Dictionary<TipoEmocao, int> contadorEmocoes;
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
+    private StarManager starManager; // Referência ao seu StarManager
+    private TelaVitoria telaVitoria; // Referência ao seu StarManager
+    [SerializeField] private GameObject painelJogo;
+    [SerializeField] private GameObject painelTelaVitoria;
 
     void Start()
     {
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
+
+        starManager = FindFirstObjectByType<StarManager>(); 
+        starManager.ResetStars(); // Reseta as estrelas no início da fase
+
+        telaVitoria = FindFirstObjectByType<TelaVitoria>();
 
         emocoesAtivas = ObterEmocoesAtivas();
 
@@ -33,14 +42,21 @@ public class Fase3Controller : MonoBehaviour
     // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
     public void VerificarEmocao(TipoEmocao emocaoDetectada)
     {
-        if(textoEmocaoDetectada != null)
+        if (textoEmocaoDetectada != null)
             textoEmocaoDetectada.text = emocaoDetectada.ToString();
 
         if (emocaoDetectada == emocaoAlvo)
         {
-            perguntasRespondidas++;
-            ProximaPergunta();
+            starManager.AddStar();
+            telaVitoria.AddCorreta(emocaoDetectada);
         }
+        else
+        {
+            telaVitoria.AddIncorreta(emocaoDetectada);
+        }
+
+        perguntasRespondidas++;
+        ProximaPergunta();
     }
 
     private List<TipoEmocao> ObterEmocoesAtivas()
@@ -75,6 +91,8 @@ public class Fase3Controller : MonoBehaviour
     {
         if (perguntasRespondidas >= numeroDePerguntas)
         {
+            painelTelaVitoria.SetActive(true);
+            painelJogo.SetActive(false);
             return;
         }
         
