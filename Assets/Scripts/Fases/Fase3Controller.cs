@@ -17,7 +17,7 @@ public class Fase3Controller : MonoBehaviour
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
     private StarManager starManager; // Referência ao seu StarManager
-    private TelaVitoria telaVitoria; // Referência ao seu StarManager
+    public TelaVitoria telaVitoria; // Referência ao seu StarManager
     [SerializeField] private GameObject painelJogo;
     [SerializeField] private GameObject painelTelaVitoria;
 
@@ -28,7 +28,7 @@ public class Fase3Controller : MonoBehaviour
         starManager = FindFirstObjectByType<StarManager>(); 
         starManager.ResetStars(); // Reseta as estrelas no início da fase
 
-        telaVitoria = FindFirstObjectByType<TelaVitoria>();
+        // telaVitoria = FindFirstObjectByType<TelaVitoria>();
 
         emocoesAtivas = ObterEmocoesAtivas();
 
@@ -47,12 +47,13 @@ public class Fase3Controller : MonoBehaviour
 
         if (emocaoDetectada == emocaoAlvo)
         {
+            Debug.Log("Acerto");
             starManager.AddStar();
-            telaVitoria.AddCorreta(emocaoDetectada);
+            telaVitoria.AddCorreta(emocaoAlvo);
         }
         else
         {
-            telaVitoria.AddIncorreta(emocaoDetectada);
+            telaVitoria.AddIncorreta(emocaoAlvo);
         }
 
         perguntasRespondidas++;
@@ -92,6 +93,7 @@ public class Fase3Controller : MonoBehaviour
         if (perguntasRespondidas >= numeroDePerguntas)
         {
             painelTelaVitoria.SetActive(true);
+            telaVitoria.DisplayResults();
             painelJogo.SetActive(false);
             return;
         }
