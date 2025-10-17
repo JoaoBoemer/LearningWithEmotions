@@ -976,7 +976,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1232,11 +1232,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &975013911 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 769971372015121057, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-  m_PrefabInstance: {fileID: 1276593862}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1025691968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1518,26 +1513,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 871731417}
     m_Modifications:
-    - target: {fileID: 769971372015121057, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 769971372015121057, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281384655757461676, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281384655757461676, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 1281384655757461676, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -100
-      objectReference: {fileID: 0}
     - target: {fileID: 2031500896220346684, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1618,61 +1593,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3323920652595994447, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_Name
-      value: txtParabens
-      objectReference: {fileID: 0}
-    - target: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: Fase
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: goldStar
-      value: 
-      objectReference: {fileID: 21300000, guid: 5c6371650236f6743b069f2ce69537f5, type: 3}
-    - target: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: grayStar
-      value: 
-      objectReference: {fileID: 21300000, guid: 44c61fb68d5129e44ac2f0d572e5bff7, type: 3}
-    - target: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: contentParent
-      value: 
-      objectReference: {fileID: 975013911}
-    - target: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: resultRowPrefab
-      value: 
-      objectReference: {fileID: 3779606665440710945, guid: d00867f06bde9c44eb976e1b6a3ef2f2, type: 3}
     - target: {fileID: 6238560689639962945, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
       propertyPath: m_Name
       value: Vitoria
-      objectReference: {fileID: 0}
-    - target: {fileID: 6238560689639962945, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6881432661525331131, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_text
-      value: "PARAB\xC9NS!\n"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6881432661525331131, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_fontSize
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 6881432661525331131, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 7886979406876911217, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8926010269965175058, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_Name
-      value: Parabens
-      objectReference: {fileID: 0}
-    - target: {fileID: 9056025347369865401, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
-      propertyPath: m_Spacing
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

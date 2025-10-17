@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 6967260273902628592}
   - component: {fileID: 6881432661525331131}
   m_Layer: 5
-  m_Name: txtVitoria
+  m_Name: txtParabens
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,7 +109,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 5.5939}
+  m_AnchoredPosition: {x: 0, y: -7}
   m_SizeDelta: {x: 0, y: -11.188}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6967260273902628592
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "VIT\xD3RIA!"
+  m_text: "PARAB\xC9NS!\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120
-  m_fontSizeBase: 120
+  m_fontSize: 110
+  m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -557,11 +557,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deabb6194642e0349b22113ca0a6a3c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Fase: 4
-  resultRowPrefab: {fileID: 0}
-  contentParent: {fileID: 0}
-  goldStar: {fileID: 0}
-  grayStar: {fileID: 0}
+  Fase: 3
+  resultRowPrefab: {fileID: 3779606665440710945, guid: d00867f06bde9c44eb976e1b6a3ef2f2, type: 3}
+  contentParent: {fileID: 769971372015121057}
+  goldStar: {fileID: 21300000, guid: 5c6371650236f6743b069f2ce69537f5, type: 3}
+  grayStar: {fileID: 21300000, guid: 44c61fb68d5129e44ac2f0d572e5bff7, type: 3}
 --- !u!1 &5818988737826791502
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +617,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 30
+  m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -965,7 +965,7 @@ GameObject:
   - component: {fileID: 1038820101500031529}
   - component: {fileID: 838578399283396170}
   m_Layer: 5
-  m_Name: Vitoria
+  m_Name: Parabens
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -988,8 +988,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -118}
-  m_SizeDelta: {x: 1070.6482, y: 197.1272}
+  m_AnchoredPosition: {x: 0, y: -100}
+  m_SizeDelta: {x: 1000, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3219797955268858480
 CanvasRenderer:

@@ -19,8 +19,9 @@ public class Fase1Controller : MonoBehaviour
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
-    private TipoEmocao emocaoAlvo; // emoção correta da pergunta atual
-    private StarManager starManager; // Referência ao seu StarManager
+    private TipoEmocao emocaoAlvo;
+    private StarManager starManager;
+    public TelaVitoria telaVitoria;
 
     void Start()
     {
@@ -92,19 +93,23 @@ public class Fase1Controller : MonoBehaviour
 
         if (emocaoEscolhida == emocaoAlvo)
         {
-            personagem.sprite = pensandoSprite;
-            perguntasRespondidas++;
+            // personagem.sprite = pensandoSprite;
             starManager.AddStar();
-            ProximaPergunta();
+            telaVitoria.AddCorreta(emocaoAlvo);
         }
         else
         {
-            personagem.sprite = erroSprite;
+            telaVitoria.AddIncorreta(emocaoAlvo);
+            // personagem.sprite = erroSprite;
         }
+
+        perguntasRespondidas++;
+        ProximaPergunta();
     }
 
     private void EncerrarFase()
     {
+        telaVitoria.DisplayResults();
         painelTelaVitoria.SetActive(true);
         painelJogo.SetActive(false);
     }

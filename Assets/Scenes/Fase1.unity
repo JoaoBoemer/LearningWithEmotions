@@ -637,6 +637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Surpresa
+  requiredEmotion: 4
 --- !u!1 &179320415
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Nojo
+  emotion: 5
   isSnapped: 0
 --- !u!225 &237651058
 CanvasGroup:
@@ -927,6 +929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Tristeza
+  requiredEmotion: 1
 --- !u!1 &283577095
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,6 +980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Nojo
+  requiredEmotion: 5
 --- !u!1 &327554008
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,6 +1149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Raiva
+  requiredEmotion: 3
 --- !u!1 &487736398
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,6 +1200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Alegria
+  requiredEmotion: 0
 --- !u!1 &493747089
 GameObject:
   m_ObjectHideFlags: 0
@@ -1539,6 +1545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Tristeza
+  emotion: 1
   isSnapped: 0
 --- !u!225 &641457508
 CanvasGroup:
@@ -1552,6 +1559,17 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &660115759 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4953294594305107133, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
+  m_PrefabInstance: {fileID: 1033549598}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deabb6194642e0349b22113ca0a6a3c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &671698703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1932,6 +1950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredEmotionTag: Medo
+  requiredEmotion: 2
 --- !u!1 &929274172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,6 +1997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   painelTelaVitoria: {fileID: 1037028}
   painelJogo: {fileID: 1012913662}
+  telaVitoria: {fileID: 660115759}
 --- !u!1 &1007338822
 GameObject:
   m_ObjectHideFlags: 0
@@ -3038,6 +3058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Surpresa
+  emotion: 4
   isSnapped: 0
 --- !u!225 &1430245332
 CanvasGroup:
@@ -3430,6 +3451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Alegria
+  emotion: 0
   isSnapped: 0
 --- !u!225 &1667540025
 CanvasGroup:
@@ -3610,6 +3632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Medo
+  emotion: 2
   isSnapped: 0
 --- !u!225 &1733542040
 CanvasGroup:
@@ -4141,6 +4164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   emotionTag: Raiva
+  emotion: 3
   isSnapped: 0
 --- !u!225 &2062477128
 CanvasGroup:

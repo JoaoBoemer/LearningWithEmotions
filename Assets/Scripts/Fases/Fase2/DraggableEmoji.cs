@@ -7,7 +7,8 @@ public class DraggableEmoji : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector3 initialPosition;
     
     // Identifica qual emoção é este emoji (ex: "Raiva", "Felicidade")
-    public string emotionTag; 
+    public string emotionTag;
+    public TipoEmocao emotion;
     
     // Usado para garantir que ele volte se não for solto corretamente
     public bool isSnapped = false; 

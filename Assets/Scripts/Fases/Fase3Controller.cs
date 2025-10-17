@@ -16,8 +16,8 @@ public class Fase3Controller : MonoBehaviour
     private Dictionary<TipoEmocao, int> contadorEmocoes;
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
-    private StarManager starManager; // Referência ao seu StarManager
-    public TelaVitoria telaVitoria; // Referência ao seu StarManager
+    private StarManager starManager;
+    public TelaVitoria telaVitoria;
     [SerializeField] private GameObject painelJogo;
     [SerializeField] private GameObject painelTelaVitoria;
 
@@ -47,7 +47,6 @@ public class Fase3Controller : MonoBehaviour
 
         if (emocaoDetectada == emocaoAlvo)
         {
-            Debug.Log("Acerto");
             starManager.AddStar();
             telaVitoria.AddCorreta(emocaoAlvo);
         }
