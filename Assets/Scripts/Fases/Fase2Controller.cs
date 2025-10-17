@@ -1,42 +1,61 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Fase1Controller : MonoBehaviour
+public class Fase2Controller : MonoBehaviour
 {
-    public Image imagemPergunta; // arraste no Inspector
+    public TextMeshProUGUI textoEmocaoDetectada;
     private ImagensFaseManager imagensManager;
-    [SerializeField] private GameObject painelTelaVitoria;
-    [SerializeField] private GameObject painelJogo;
-
-    List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
-    private Dictionary<TipoEmocao, int> contadorEmocoes;
-    public Image personagem;
-    public Sprite pensandoSprite;
-    public Sprite erroSprite;
+    public Image imagemPergunta;
 
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
+    private Dictionary<TipoEmocao, int> contadorEmocoes;
     private TipoEmocao emocaoAlvo;
+    List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
     private StarManager starManager;
     public TelaVitoria telaVitoria;
+    [SerializeField] private GameObject painelJogo;
+    [SerializeField] private GameObject painelTelaVitoria;
 
     void Start()
     {
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
 
-        emocoesAtivas = ObterEmocoesAtivas();
-
         starManager = FindFirstObjectByType<StarManager>(); 
         starManager.ResetStars(); // Reseta as estrelas no início da fase
 
-        // Inicializa contador
-        contadorEmocoes = new Dictionary<TipoEmocao, int>();
-        foreach (var emocao in emocoesAtivas)
-            contadorEmocoes[emocao] = 0;
+        // telaVitoria = FindFirstObjectByType<TelaVitoria>();
 
+        emocoesAtivas = ObterEmocoesAtivas();
+
+        numeroDePerguntas = emocoesAtivas.Count;
+
+        IniciarContador();
+
+        ProximaPergunta();
+    }
+
+    // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
+    public void VerificarEmocao(TipoEmocao emocaoDetectada)
+    {
+        if (textoEmocaoDetectada != null)
+            textoEmocaoDetectada.text = emocaoDetectada.ToString();
+
+        if (emocaoDetectada == emocaoAlvo)
+        {
+            starManager.AddStar();
+            telaVitoria.AddCorreta(emocaoAlvo);
+        }
+        else
+        {
+            telaVitoria.AddIncorreta(emocaoAlvo);
+        }
+
+        perguntasRespondidas++;
         ProximaPergunta();
     }
 
@@ -68,54 +87,16 @@ public class Fase1Controller : MonoBehaviour
         return emocoesAtivas;
     }
 
-    private void ProximaPergunta()
+    void ProximaPergunta()
     {
         if (perguntasRespondidas >= numeroDePerguntas)
         {
-            EncerrarFase();
+            painelTelaVitoria.SetActive(true);
+            telaVitoria.DisplayResults();
+            painelJogo.SetActive(false);
             return;
         }
-
-        // Não deve permitir por padrão nas configurações
-        if (emocoesAtivas.Count == 0)
-        {
-            Debug.LogWarning("Nenhuma emoção ativa!");
-            return;
-        }
-
-        BuscarProximaEmocao();
-    }
-
-    public void Responder(int emocaoIndex)
-    {
-        // Converte o índice para o enum TipoEmocao
-        TipoEmocao emocaoEscolhida = (TipoEmocao)emocaoIndex;
-
-        if (emocaoEscolhida == emocaoAlvo)
-        {
-            // personagem.sprite = pensandoSprite;
-            starManager.AddStar();
-            telaVitoria.AddCorreta(emocaoAlvo);
-        }
-        else
-        {
-            telaVitoria.AddIncorreta(emocaoAlvo);
-            // personagem.sprite = erroSprite;
-        }
-
-        perguntasRespondidas++;
-        ProximaPergunta();
-    }
-
-    private void EncerrarFase()
-    {
-        telaVitoria.DisplayResults();
-        painelTelaVitoria.SetActive(true);
-        painelJogo.SetActive(false);
-    }
-
-    private void BuscarProximaEmocao()
-    {
+        
         // Descobre o menor número de vezes usado
         int minimo = contadorEmocoes.Values.Min();
 
@@ -139,5 +120,12 @@ public class Fase1Controller : MonoBehaviour
             imagemPergunta.sprite = imagem;
         else
             Debug.LogWarning($"Sem imagens disponíveis para {emocaoAlvo}");
+    }
+
+    private void IniciarContador()
+    {
+        contadorEmocoes = new Dictionary<TipoEmocao, int>();
+        foreach (var emocao in emocoesAtivas)
+            contadorEmocoes[emocao] = 0;
     }
 }

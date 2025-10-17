@@ -1962,7 +1962,7 @@ GameObject:
   - component: {fileID: 929274173}
   - component: {fileID: 929274174}
   m_Layer: 0
-  m_Name: Fase2Controller
+  m_Name: Fase1Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4052,7 +4052,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2049765558
 RectTransform:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Fase2Controller : MonoBehaviour
+public class Fase1Controller : MonoBehaviour
 {
     [SerializeField] private GameObject painelTelaVitoria;
     [SerializeField] private GameObject painelJogo;
