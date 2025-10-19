@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
@@ -7,6 +8,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject painelMenuInicial;
     [SerializeField] private GameObject painelOpcoes;
     [SerializeField] private GameObject painelSelecaoFase;
+    public Slider musicSlider;
+    public Slider sfxSlider;
 
     void Awake()
     {
@@ -47,5 +50,37 @@ public class MenuManager : MonoBehaviour
     public void SairJogo()
     {
         Application.Quit();
+    }
+
+    // Use o OnEnable() para garantir que a conexão ocorra
+    // sempre que o painel de opções for ativado (ou no Start, se for sempre visível)
+    void OnEnable()
+    {
+        // 1. Garante que o AudioManager existe
+        if (AudioManager.Instance == null)
+        {
+            Debug.LogError("AudioManager não encontrado. Verifique se ele está na cena inicial.");
+            return;
+        }
+
+        // 2. Carrega os valores salvos (do PlayerPrefs) e aplica aos Sliders
+        float musicVolume = PlayerPrefs.GetFloat("musicaVolume", 0.75f);
+        float sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 0.75f);
+        
+        musicSlider.value = musicVolume;
+        sfxSlider.value = sfxVolume;
+
+        // 3. Reconecta os eventos dos Sliders ao Singleton persistente
+        // Primeiro, remova ouvintes antigos para evitar duplicação (se você usar OnEnable)
+        musicSlider.onValueChanged.RemoveAllListeners();
+        sfxSlider.onValueChanged.RemoveAllListeners();
+
+        // Adiciona os novos ouvintes
+        musicSlider.onValueChanged.AddListener(AudioManager.Instance.SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+
+        // Opcional: Se os Sliders não estiverem em 0/1, force a chamada para aplicar os valores iniciais (embora o .value = já o faça)
+        AudioManager.Instance.SetMusicVolume(musicVolume);
+        AudioManager.Instance.SetSFXVolume(sfxVolume);
     }
 }

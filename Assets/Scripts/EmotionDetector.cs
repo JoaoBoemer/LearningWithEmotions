@@ -9,7 +9,7 @@ public class EmotionDetector : MonoBehaviour
 {
     public GeminiClient geminiClient;
     private string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-    public Fase3Controller faseEmocoes;
+    public Fase2Controller faseEmocoes;
     private WebCamTexture webcamTexture;
     public CameraCapture cameraCapture;
     private bool isProcessing = false;

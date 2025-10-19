@@ -7,6 +7,7 @@ public class Fase1Controller : MonoBehaviour
     private StarManager starManager; // Referência ao seu StarManager
     private int perguntasRespondidas = 0;
     public TelaVitoria telaVitoria;
+    public FeedbackManager feedbackManager;
     public void Start()
     {
         starManager = FindFirstObjectByType<StarManager>();
@@ -18,6 +19,7 @@ public class Fase1Controller : MonoBehaviour
         perguntasRespondidas++;
 
         telaVitoria.AddCorreta(emocao);
+        feedbackManager.PlayFeedbackSimples(true);
 
         if (perguntasRespondidas == 6)
         {
@@ -29,6 +31,7 @@ public class Fase1Controller : MonoBehaviour
     {
         perguntasRespondidas++;
         telaVitoria.AddIncorreta(emocao);
+        feedbackManager.PlayFeedbackSimples(false);
 
         if (perguntasRespondidas == 6)
         {

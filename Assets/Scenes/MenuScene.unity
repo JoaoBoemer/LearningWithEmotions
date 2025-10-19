@@ -3344,6 +3344,8 @@ MonoBehaviour:
   painelMenuInicial: {fileID: 1291133612}
   painelOpcoes: {fileID: 720675090}
   painelSelecaoFase: {fileID: 2058250292}
+  musicSlider: {fileID: 984706170}
+  sfxSlider: {fileID: 19591751}
 --- !u!1 &923352750
 GameObject:
   m_ObjectHideFlags: 0
