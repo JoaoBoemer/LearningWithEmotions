@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI; // Importante para trabalhar com UI Images
 
@@ -9,6 +10,22 @@ public class StarManager : MonoBehaviour
 
     private int currentStars = 0; // Quantas estrelas o jogador já tem (começa em 0)
 
+    public Image backgroundImage;
+    private Color originalColor;
+
+    [Header("Configurações de Feedback")]
+    [SerializeField] private Color successColor = Color.green;
+    [SerializeField] private Color failureColor = Color.red;
+    [SerializeField] private float fadeDuration = 0.5f; // Tempo para voltar ao normal
+
+    private void Start()
+    {
+        if (backgroundImage != null)
+        {
+            originalColor = backgroundImage.color;
+        }
+    }
+
     // Método chamado quando a fase começa, para resetar as estrelas
     public void ResetStars()
     {
@@ -19,11 +36,17 @@ public class StarManager : MonoBehaviour
     // Método para adicionar uma estrela (chamado a cada acerto)
     public void AddStar()
     {
+        StartColorFeedback(successColor);
         if (currentStars < starImages.Length) // Garante que não adicionamos mais estrelas do que temos Image disponíveis
         {
             currentStars++; // Incrementa o contador de estrelas
             UpdateStarDisplay(); // Atualiza a exibição visual
         }
+    }
+
+    public void IncorrectFeedback()
+    {
+        StartColorFeedback(failureColor);
     }
 
     // Método para atualizar a exibição das estrelas com base em 'currentStars'
@@ -44,23 +67,39 @@ public class StarManager : MonoBehaviour
         }
     }
 
-    // Exemplo de como você chamaria isso de outro script (seu Game Manager, por exemplo)
-    /*
-    // Em algum outro script (ex: GameController.cs)
-    public StarManager starManager; // Referência ao seu StarManager
-
-    void Start()
+    private void StartColorFeedback(Color targetColor)
     {
-        // Encontra o StarManager na cena (ou o atribui via Inspector)
-        starManager = FindObjectOfType<StarManager>(); 
-        starManager.ResetStars(); // Reseta as estrelas no início da fase
-    }
+        // Interrompe qualquer animação de cor anterior
+        StopAllCoroutines();
 
-    // Quando o jogador acerta uma pergunta:
-    public void PlayerAnsweredCorrectly()
-    {
-        starManager.AddStar(); // Adiciona uma estrela
-        // ... Lógica para ir para a próxima pergunta ...
+        // Inicia a nova animação
+        StartCoroutine(AnimateColorFeedback(targetColor));
     }
-    */
+    
+    private IEnumerator AnimateColorFeedback(Color targetColor)
+    {
+        // 1. Mudar IMEDIATAMENTE para a cor de feedback (verde ou vermelho)
+        backgroundImage.color = targetColor;
+
+        // 2. Esperar um frame para garantir a mudança visual
+        yield return null; 
+
+        // 3. Fazer a cor retornar gradualmente para a cor original
+        float time = 0;
+        Color startColor = backgroundImage.color;
+        
+        while (time < fadeDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / fadeDuration;
+            
+            // Suaviza a transição (opcional: Use 't * t' para aceleração)
+            backgroundImage.color = Color.Lerp(startColor, originalColor, t);
+            
+            yield return null;
+        }
+
+        // 4. Garante que a cor final seja exatamente a cor original
+        backgroundImage.color = originalColor;
+    }
 }

@@ -2454,6 +2454,7 @@ RectTransform:
   - {fileID: 582787882}
   - {fileID: 509303108}
   - {fileID: 1460008631}
+  - {fileID: 1441590477}
   m_Father: {fileID: 871731417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2642,6 +2643,10 @@ MonoBehaviour:
   starImages: []
   filledStarSprite: {fileID: 21300000, guid: 5c6371650236f6743b069f2ce69537f5, type: 3}
   emptyStarSprite: {fileID: 21300000, guid: 44c61fb68d5129e44ac2f0d572e5bff7, type: 3}
+  backgroundImage: {fileID: 0}
+  successColor: {r: 0, g: 1, b: 0, a: 1}
+  failureColor: {r: 1, g: 0, b: 0, a: 1}
+  fadeDuration: 0.5
 --- !u!1 &1159909659
 GameObject:
   m_ObjectHideFlags: 0
@@ -3238,6 +3243,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329807772}
   m_CullTransparentMesh: 1
+--- !u!1 &1441590476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1441590477}
+  - component: {fileID: 1441590478}
+  m_Layer: 0
+  m_Name: FeedbackManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1441590477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441590476}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -49.91736, y: 9.77478, z: 5.573602}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 925384209}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1441590478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441590476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a45ad45b5c8a18047a79f4cb441118e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acertoSFX: {fileID: 8300000, guid: 9f07d9270e907664da5cbd34afe3bd03, type: 3}
+  erroSFX: {fileID: 8300000, guid: c600285f0cf80e8449cda213213b6046, type: 3}
 --- !u!1 &1460008630
 GameObject:
   m_ObjectHideFlags: 0
@@ -4090,7 +4141,7 @@ GameObject:
   - component: {fileID: 1945771877}
   - component: {fileID: 1945771876}
   m_Layer: 0
-  m_Name: Fase3Controller
+  m_Name: Fase2Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4110,6 +4161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textoEmocaoDetectada: {fileID: 1329807774}
   imagemPergunta: {fileID: 480990230}
+  feedbackManager: {fileID: 1441590478}
   numeroDePerguntas: 6
   telaVitoria: {fileID: 1276593864}
   painelJogo: {fileID: 925384208}

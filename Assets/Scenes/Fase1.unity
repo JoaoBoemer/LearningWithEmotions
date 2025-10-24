@@ -2952,6 +2952,10 @@ MonoBehaviour:
   - {fileID: 351732479}
   filledStarSprite: {fileID: 21300000, guid: 5c6371650236f6743b069f2ce69537f5, type: 3}
   emptyStarSprite: {fileID: 21300000, guid: 44c61fb68d5129e44ac2f0d572e5bff7, type: 3}
+  backgroundImage: {fileID: 111128869}
+  successColor: {r: 0, g: 1, b: 0, a: 1}
+  failureColor: {r: 1, g: 0, b: 0, a: 1}
+  fadeDuration: 0.5
 --- !u!1 &865351721
 GameObject:
   m_ObjectHideFlags: 0

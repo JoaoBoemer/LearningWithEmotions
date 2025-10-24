@@ -32,6 +32,7 @@ public class Fase1Controller : MonoBehaviour
         perguntasRespondidas++;
         telaVitoria.AddIncorreta(emocao);
         feedbackManager.PlayFeedbackSimples(false);
+        starManager.IncorrectFeedback();
 
         if (perguntasRespondidas == 6)
         {

@@ -73,14 +73,17 @@ public class CameraCapture : MonoBehaviour
         StopCamera();
     }
 
-    void Oestroy()
+    void OnDestroy()
     {
         StopCamera();
     }
 
-    private void StopCamera()
+    public void StopCamera()
     {
-        if (webcamTexture != null && webcamTexture.isPlaying)
+        Debug.Log("Try Harder");
+        if (webcamTexture != null
+        //  && webcamTexture.isPlaying
+         )
         {
             webcamTexture.Stop();
             webcamTexture = null;

@@ -9,6 +9,7 @@ public class Fase2Controller : MonoBehaviour
     public TextMeshProUGUI textoEmocaoDetectada;
     private ImagensFaseManager imagensManager;
     public Image imagemPergunta;
+    public FeedbackManager feedbackManager;
 
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
@@ -49,10 +50,13 @@ public class Fase2Controller : MonoBehaviour
         {
             starManager.AddStar();
             telaVitoria.AddCorreta(emocaoAlvo);
+            feedbackManager.PlayFeedbackSimples(true);
         }
         else
         {
             telaVitoria.AddIncorreta(emocaoAlvo);
+            starManager.IncorrectFeedback();
+            feedbackManager.PlayFeedbackSimples(false);
         }
 
         perguntasRespondidas++;

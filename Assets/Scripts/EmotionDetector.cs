@@ -10,6 +10,7 @@ public class EmotionDetector : MonoBehaviour
     public GeminiClient geminiClient;
     private string apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     public Fase2Controller faseEmocoes;
+    public Fase4Controller fase4Emocoes;
     private WebCamTexture webcamTexture;
     public CameraCapture cameraCapture;
     private bool isProcessing = false;
@@ -100,7 +101,11 @@ public class EmotionDetector : MonoBehaviour
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Erro na requisição: " + www.error);
-                faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                if (faseEmocoes != null)
+                    faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                else if(fase4Emocoes != null)
+                    fase4Emocoes.VerificarEmocao(TipoEmocao.Neutro);
+
                 // onComplete?.Invoke("Erro");
             }
             else
@@ -116,18 +121,27 @@ public class EmotionDetector : MonoBehaviour
                         string emotion = response.candidates[0].content.parts[0].text;
                         Debug.Log("Emoção detectada: " + emotion);
 
-                        faseEmocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
+                        if (faseEmocoes != null)
+                            faseEmocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
+                        else if(fase4Emocoes != null)
+                            fase4Emocoes.VerificarEmocao(conversorEmocaoEnum(emotion));
                     }
                     else
                     {
                         Debug.LogError("Resposta da API não contém um resultado válido.");
-                        faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                        if (faseEmocoes != null)
+                            faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                        else if(fase4Emocoes != null)
+                            fase4Emocoes.VerificarEmocao(TipoEmocao.Neutro);
                     }
                 }
                 catch (System.Exception e)
                 {
                     Debug.LogError("Erro ao processar a resposta JSON: " + e.Message);
-                    faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                    if (faseEmocoes != null)
+                        faseEmocoes.VerificarEmocao(TipoEmocao.Neutro);
+                    else if(fase4Emocoes != null)
+                        fase4Emocoes.VerificarEmocao(TipoEmocao.Neutro);
                 }
             }
 

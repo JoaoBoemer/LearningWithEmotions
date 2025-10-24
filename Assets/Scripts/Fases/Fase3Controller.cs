@@ -15,6 +15,7 @@ public class Fase3Controller : MonoBehaviour
     public Image personagem;
     public Sprite pensandoSprite;
     public Sprite erroSprite;
+    public FeedbackManager feedbackManager;
 
     [Header("Configurações da fase")]
     public int numeroDePerguntas = 6;
@@ -96,10 +97,13 @@ public class Fase3Controller : MonoBehaviour
             // personagem.sprite = pensandoSprite;
             starManager.AddStar();
             telaVitoria.AddCorreta(emocaoAlvo);
+            feedbackManager.PlayFeedbackSimples(true);
         }
         else
         {
             telaVitoria.AddIncorreta(emocaoAlvo);
+            starManager.IncorrectFeedback();
+            feedbackManager.PlayFeedbackSimples(false);
             // personagem.sprite = erroSprite;
         }
 

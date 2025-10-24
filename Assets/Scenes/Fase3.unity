@@ -300,6 +300,7 @@ RectTransform:
   - {fileID: 253515884}
   - {fileID: 1863970837}
   - {fileID: 454285134}
+  - {fileID: 1107123746}
   m_Father: {fileID: 2065957859}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2093,6 +2094,7 @@ MonoBehaviour:
   personagem: {fileID: 753553403}
   pensandoSprite: {fileID: 21300000, guid: cbfac9c302242c24cb3fdd40106917a1, type: 3}
   erroSprite: {fileID: 21300000, guid: 2004e1a711d060e45950a64e0c390ed1, type: 3}
+  feedbackManager: {fileID: 1107123747}
   numeroDePerguntas: 6
   telaVitoria: {fileID: 3358764209125828911}
 --- !u!1 &942575027
@@ -2349,6 +2351,52 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &1107123745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1107123746}
+  - component: {fileID: 1107123747}
+  m_Layer: 0
+  m_Name: FeedbackManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1107123746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107123745}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -49.91736, y: 9.77478, z: 5.573602}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 111558293}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1107123747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107123745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a45ad45b5c8a18047a79f4cb441118e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acertoSFX: {fileID: 8300000, guid: 9f07d9270e907664da5cbd34afe3bd03, type: 3}
+  erroSFX: {fileID: 8300000, guid: c600285f0cf80e8449cda213213b6046, type: 3}
 --- !u!1 &1115666418
 GameObject:
   m_ObjectHideFlags: 0
