@@ -2096,6 +2096,7 @@ MonoBehaviour:
   erroSprite: {fileID: 21300000, guid: 2004e1a711d060e45950a64e0c390ed1, type: 3}
   feedbackManager: {fileID: 1107123747}
   numeroDePerguntas: 6
+  starManager: {fileID: 1863970838}
   telaVitoria: {fileID: 3358764209125828911}
 --- !u!1 &942575027
 GameObject:
@@ -4121,6 +4122,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1414828966769477853, guid: c1a6b4fc8ebd1f54ea6aaa93d82efc40, type: 3}
   m_PrefabInstance: {fileID: 1863970836}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1863970838 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3338624026996031382, guid: c1a6b4fc8ebd1f54ea6aaa93d82efc40, type: 3}
+  m_PrefabInstance: {fileID: 1863970836}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c67f3e41a94ed7045ac3827d548d59f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1917687163
 GameObject:
   m_ObjectHideFlags: 0

@@ -3143,6 +3143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   painelTelaVitoria: {fileID: 1037028}
   painelJogo: {fileID: 1012913662}
+  starManager: {fileID: 844212948}
   telaVitoria: {fileID: 660115759}
   feedbackManager: {fileID: 1152352721}
 --- !u!1 &1012913662

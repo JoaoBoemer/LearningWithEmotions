@@ -15,6 +15,10 @@ public class MenuManager : MonoBehaviour
     {
         // DontDestroyOnLoad(gameObject);
         GameSettings.Carregar();
+        PlayerPrefs.SetInt("TutorialVisto1", 0);
+        PlayerPrefs.SetInt("TutorialVisto2", 0);
+        PlayerPrefs.SetInt("TutorialVisto3", 0);
+        PlayerPrefs.SetInt("TutorialVisto4", 0);
     }
 
     public void AbrirFase(int faseId)

@@ -17,7 +17,7 @@ public class Fase2Controller : MonoBehaviour
     private Dictionary<TipoEmocao, int> contadorEmocoes;
     private TipoEmocao emocaoAlvo;
     List<TipoEmocao> emocoesAtivas = new List<TipoEmocao>();
-    private StarManager starManager;
+    public StarManager starManager;
     public TelaVitoria telaVitoria;
     [SerializeField] private GameObject painelJogo;
     [SerializeField] private GameObject painelTelaVitoria;
@@ -26,7 +26,7 @@ public class Fase2Controller : MonoBehaviour
     {
         imagensManager = FindFirstObjectByType<ImagensFaseManager>();
 
-        starManager = FindFirstObjectByType<StarManager>(); 
+        // starManager = FindFirstObjectByType<StarManager>(); 
         starManager.ResetStars(); // Reseta as estrelas no início da fase
 
         // telaVitoria = FindFirstObjectByType<TelaVitoria>();

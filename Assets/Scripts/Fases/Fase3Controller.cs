@@ -21,7 +21,7 @@ public class Fase3Controller : MonoBehaviour
     public int numeroDePerguntas = 6;
     private int perguntasRespondidas = 0;
     private TipoEmocao emocaoAlvo;
-    private StarManager starManager;
+    public StarManager starManager;
     public TelaVitoria telaVitoria;
 
     void Start()
@@ -30,7 +30,7 @@ public class Fase3Controller : MonoBehaviour
 
         emocoesAtivas = ObterEmocoesAtivas();
 
-        starManager = FindFirstObjectByType<StarManager>(); 
+        // starManager = FindFirstObjectByType<StarManager>(); 
         starManager.ResetStars(); // Reseta as estrelas no início da fase
 
         // Inicializa contador

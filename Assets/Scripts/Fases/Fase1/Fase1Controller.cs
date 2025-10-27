@@ -4,13 +4,13 @@ public class Fase1Controller : MonoBehaviour
 {
     [SerializeField] private GameObject painelTelaVitoria;
     [SerializeField] private GameObject painelJogo;
-    private StarManager starManager; // Referência ao seu StarManager
+    public StarManager starManager; // Referência ao seu StarManager
     private int perguntasRespondidas = 0;
     public TelaVitoria telaVitoria;
     public FeedbackManager feedbackManager;
     public void Start()
     {
-        starManager = FindFirstObjectByType<StarManager>();
+        // starManager = FindFirstObjectByType<StarManager>();
         starManager.ResetStars(); // Reseta as estrelas no início da fase
     }
     public void RespostaCorreta(TipoEmocao emocao)

@@ -587,7 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad13d7667ec30f142b4279476d518801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pastaFase: Fase3
+  pastaFase: Fase4
 --- !u!4 &237938769
 Transform:
   m_ObjectHideFlags: 0
@@ -1626,6 +1626,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2031500896220346684, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3664798511852326353, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6238560689639962945, guid: bcf65d97e66127e4b987f78b4298743e, type: 3}
