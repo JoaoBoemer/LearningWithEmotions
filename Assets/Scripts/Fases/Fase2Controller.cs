@@ -43,6 +43,7 @@ public class Fase2Controller : MonoBehaviour
     // Essa função deve ser chamada pela sua rotina de detecção a cada 1 segundo
     public void VerificarEmocao(TipoEmocao emocaoDetectada)
     {
+        return;
         if (textoEmocaoDetectada != null)
             textoEmocaoDetectada.text = emocaoDetectada.ToString();
 

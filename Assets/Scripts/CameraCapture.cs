@@ -5,21 +5,7 @@ public class CameraCapture : MonoBehaviour
 {
     public RawImage display;
     private WebCamTexture webcamTexture;
-    //public static CameraCapture instance; // Criar uma instância global para acesso
-    // private bool camAvaiable;
-
-    // void Awake()
-    // {
-    //     if (instance == null)
-    //     {
-    //         instance = this; // Permite que outros scripts acessem
-    //         DontDestroyOnLoad(gameObject);
-    //     }
-    //     else
-    //     {
-    //         Destroy(gameObject);
-    //     }
-    // }
+    public Texture2D imgTeste;
 
     void Start()
     {
@@ -57,15 +43,44 @@ public class CameraCapture : MonoBehaviour
             return;
         }
 
-        Debug.Log("Usando a camera: " + webcamTexture.deviceName);
+        // Debug.Log("Usando a camera: " + webcamTexture.deviceName);
 
         webcamTexture.Play();
         display.texture = webcamTexture;
     }
 
-    public WebCamTexture GetCameraTexture()
+    public string GetBase64()
     {
-        return webcamTexture;
+        Texture source = display.texture;
+        RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.Default);
+
+        Graphics.Blit(source, rt);
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        Texture2D novaTextura = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+
+        novaTextura.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        novaTextura.Apply();
+
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(rt);
+
+        byte[] imgBytes = novaTextura.EncodeToJPG();
+        string b64Image = System.Convert.ToBase64String(imgBytes);
+
+        // Debug.Log(b64Image);
+
+        return b64Image;
+        
+        // Texture2D tempTexture = new Texture2D(webcamTexture.width, webcamTexture.height);
+        // tempTexture.SetPixels(webcamTexture.GetPixels());
+        // tempTexture.Apply();
+
+        // byte[] imageBytes = tempTexture.EncodeToJPG();
+        // string base64Image = System.Convert.ToBase64String(imageBytes);
+
+        // return base64Image;
     }
 
     void OnDisable()
@@ -80,7 +95,6 @@ public class CameraCapture : MonoBehaviour
 
     public void StopCamera()
     {
-        Debug.Log("Try Harder");
         if (webcamTexture != null
         //  && webcamTexture.isPlaying
          )
@@ -88,7 +102,6 @@ public class CameraCapture : MonoBehaviour
             webcamTexture.Stop();
             webcamTexture = null;
             display.texture = null;
-            Debug.Log("Camera parada");
         }
     }
 }

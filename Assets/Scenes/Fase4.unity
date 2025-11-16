@@ -312,7 +312,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "2. Imite a emo\xE7\xE3o na c\xE2mera e pressione em Detectar"
+  m_text: "2. Analise a situa\xE7\xE3o e fa\xE7a a emo\xE7\xE3o correspondente na
+    c\xE2mera e pressione em Detectar"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
@@ -427,8 +428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -615, y: 172}
-  m_SizeDelta: {x: 555.2704, y: 336.3532}
+  m_AnchoredPosition: {x: -520.7555, y: 68.140564}
+  m_SizeDelta: {x: 743.7594, y: 544.072}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &125084051
 MonoBehaviour:
@@ -826,7 +827,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10, y: -50}
+  m_AnchoredPosition: {x: -10, y: -96}
   m_SizeDelta: {x: 413.1167, y: 142.39563}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &306723314
@@ -2185,10 +2186,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 125084050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7.3398, y: -123.9342}
-  m_SizeDelta: {x: 540.59, y: 492.7176}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &958706933
 MonoBehaviour:
@@ -2210,7 +2211,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b5876736cc81f594b94eca9d039a008b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b9a658bcad1d60e4fa5f8e94968e97c0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3958,7 +3959,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1. Analise a emo\xE7\xE3o"
+  m_text: "1. Analise a situa\xE7\xE3o"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
   m_sharedMaterial: {fileID: 1270287484492294991, guid: fbefb0b4c548e404190cded0fe9308e8, type: 2}
